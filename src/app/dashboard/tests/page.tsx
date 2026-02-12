@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ds } from "@/lib/designSystem";
 
 interface DbTest {
   id: number;
@@ -34,76 +35,103 @@ export default function MyTestsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const statusDot = (status: string) => {
+    if (status === "active") return ds.statusDot.active;
+    if (status === "draft") return ds.statusDot.draft;
+    return ds.statusDot.inactive;
+  };
+
   return (
-    <div className="p-6 lg:p-8 max-w-6xl">
-      <div className="flex items-center justify-between mb-8">
+    <div className={ds.page}>
+      <div className="flex items-center justify-between mb-10">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">My Tests</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage assessments and track performance</p>
+          <h1 className={ds.pageTitle}>My Tests</h1>
+          <p className={ds.pageSubtitle}>Manage assessments and track performance</p>
         </div>
-        <Link href="/dashboard/create" className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-          Create New Test
+        <Link href="/dashboard/create" className={ds.btnPrimary}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Create Test
         </Link>
       </div>
 
       {loading && (
-        <div className="text-center py-16 text-gray-400 text-sm">Loading tests...</div>
+        <div className="text-center py-20 text-gray-400 text-[13px]">Loading tests…</div>
       )}
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3 mb-6">{error}</div>
+        <div className="text-[13px] text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3 mb-6">{error}</div>
       )}
 
       {!loading && !error && tests.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-gray-400 text-sm mb-4">No tests yet. Create your first assessment!</p>
-          <Link href="/dashboard/create" className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-            Create New Test
-          </Link>
+        <div className="text-center py-20">
+          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-400">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+            </svg>
+          </div>
+          <p className="text-gray-500 text-[13px] mb-1">No tests yet</p>
+          <p className="text-gray-400 text-[12px] mb-5">Create your first assessment to get started</p>
+          <Link href="/dashboard/create" className={ds.btnPrimary}>Create Test</Link>
         </div>
       )}
 
-      <div className="space-y-3">
-        {tests.map((test) => (
-          <Link
-            key={test.id}
-            href={`/dashboard/tests/${test.id}`}
-            className="block bg-white rounded-lg border border-gray-200 p-5 hover:border-gray-300 transition-all"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <h3 className="font-semibold text-gray-900 text-sm">{test.title}</h3>
-                  <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium ${
-                    test.status === "active"
-                      ? "bg-emerald-50 text-emerald-700"
-                      : test.status === "draft"
-                      ? "bg-gray-100 text-gray-500"
-                      : "bg-gray-100 text-gray-400"
-                  }`}>
-                    {test.status.charAt(0).toUpperCase() + test.status.slice(1)}
-                  </span>
-                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-600 capitalize">
-                    {test.test_type}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-500 mb-3 line-clamp-1">{test.description || "No description"}</p>
-                <div className="flex flex-wrap gap-5 text-xs text-gray-400">
-                  <span>{test.candidates_count} candidates</span>
-                  <span>Avg score: {Number(test.avg_score) || "n/a"}</span>
-                  <span>{Number(test.completion_rate)}% completion</span>
-                  <span>{test.model}</span>
-                  <span className="capitalize">{test.difficulty}</span>
-                  <span>Created {new Date(test.created_at).toLocaleDateString()}</span>
-                </div>
-              </div>
-              <svg className="w-4 h-4 text-gray-300 shrink-0 ml-4 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {!loading && !error && tests.length > 0 && (
+        <div className={`${ds.card} overflow-hidden`}>
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-100">
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Test</th>
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Type</th>
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Candidates</th>
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Avg Score</th>
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Completion</th>
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-left`}>Created</th>
+                <th className={`${ds.tableCell} ${ds.tableHeader} text-right`}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {tests.map((test, i) => (
+                <tr key={test.id} className={`${ds.tableRow} group ${i < tests.length - 1 ? "border-b border-gray-50" : ""}`}>
+                  <td className={ds.tableCell}>
+                    <div className="flex items-center gap-2.5">
+                      <span className={statusDot(test.status)} title={test.status} />
+                      <div>
+                        <Link href={`/dashboard/tests/${test.id}`} className="text-[13px] font-medium text-gray-900 hover:text-indigo-600 transition-colors">
+                          {test.title}
+                        </Link>
+                        <div className="text-[11px] text-gray-400 line-clamp-1 max-w-[280px]">{test.description || "No description"}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className={`${ds.tableCell} text-gray-500 capitalize text-[12px]`}>{test.test_type}</td>
+                  <td className={`${ds.tableCell} text-gray-600`}>{test.candidates_count}</td>
+                  <td className={ds.tableCell}>
+                    <span className={`text-[13px] font-medium ${ds.scoreBadge(Number(test.avg_score))}`}>
+                      {Number(test.avg_score) || "—"}
+                    </span>
+                  </td>
+                  <td className={ds.tableCell}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-16 h-1 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${Number(test.completion_rate)}%` }} />
+                      </div>
+                      <span className="text-[12px] text-gray-400">{Number(test.completion_rate)}%</span>
+                    </div>
+                  </td>
+                  <td className={ds.tableCellMuted}>{new Date(test.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</td>
+                  <td className={`${ds.tableCell} text-right`}>
+                    <Link href={`/dashboard/tests/${test.id}`} className="text-[12px] text-gray-400 hover:text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-all duration-200">
+                      View →
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

@@ -29,6 +29,8 @@ export default function TestDetailPage() {
   const [test, setTest] = useState<TestDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [toggling, setToggling] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -41,6 +43,30 @@ export default function TestDetailPage() {
       .catch(() => setError("Test not found"))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const togglePublish = async () => {
+    if (!test) return;
+    setToggling(true);
+    try {
+      const newStatus = test.status === "active" ? "draft" : "active";
+      const res = await fetch(`/api/tests/${test.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setTest(prev => prev ? { ...prev, status: newStatus } : prev);
+      }
+    } catch { /* ignore */ }
+    finally { setToggling(false); }
+  };
+
+  const copyLink = () => {
+    const url = `${window.location.origin}/test/${test?.id}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (loading) return <div className="p-6 lg:p-8 text-gray-400 text-sm">Loading...</div>;
   if (error || !test) return (
@@ -68,6 +94,26 @@ export default function TestDetailPage() {
           </span>
         </div>
         <p className="text-gray-500 text-sm mt-1">{test.description || "No description"}</p>
+
+        {/* Actions */}
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={togglePublish}
+            disabled={toggling}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              test.status === "active"
+                ? "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                : "bg-[#10B981] hover:bg-[#059669] text-white"
+            }`}
+          >
+            {toggling ? "Updating..." : test.status === "active" ? "Unpublish" : "Publish"}
+          </button>
+          {test.status === "active" && (
+            <button onClick={copyLink} className="px-4 py-2 rounded-md text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
+              {copied ? "Copied!" : "Copy Share Link"}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
@@ -114,7 +160,6 @@ export default function TestDetailPage() {
         </div>
       </div>
 
-      {/* Task Prompt */}
       {test.task_prompt && (
         <div className="bg-white rounded-lg border border-gray-200 p-5 mb-4">
           <h3 className="text-sm font-semibold text-gray-900 mb-2">Task Prompt</h3>
@@ -122,7 +167,6 @@ export default function TestDetailPage() {
         </div>
       )}
 
-      {/* Expected Outcomes */}
       {test.expected_outcomes && (
         <div className="bg-white rounded-lg border border-gray-200 p-5 mb-4">
           <h3 className="text-sm font-semibold text-gray-900 mb-2">Expected Outcomes</h3>
@@ -130,7 +174,25 @@ export default function TestDetailPage() {
         </div>
       )}
 
-      {/* No candidates yet message */}
+      {/* Share link section */}
+      {test.status === "active" && (
+        <div className="bg-[#6366F1]/5 border border-[#6366F1]/10 rounded-lg p-5 mb-4">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">Share This Test</h3>
+          <p className="text-xs text-gray-500 mb-3">Anyone with this link can take the test without an account.</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              readOnly
+              value={`${typeof window !== "undefined" ? window.location.origin : ""}/test/${test.id}`}
+              className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-2 text-sm text-gray-600 font-mono"
+            />
+            <button onClick={copyLink} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shrink-0">
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="px-5 py-3.5 border-b border-gray-200">
           <h2 className="text-sm font-semibold text-gray-900">Candidate Results</h2>

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getSql } from "@/lib/db";
-import { mockCandidates } from "@/lib/mockData";
 
 export async function GET() {
   try {
@@ -34,10 +33,6 @@ export async function GET() {
       LIMIT 100
     `;
 
-    if (rows.length === 0) {
-      return NextResponse.json(mockCandidates);
-    }
-
     // Calculate percentile per candidate
     const candidates = rows.map((r, _i, arr) => {
       const betterCount = arr.filter((o) => Number(o.promptScore) < Number(r.promptScore)).length;
@@ -51,6 +46,6 @@ export async function GET() {
     return NextResponse.json(candidates);
   } catch (e) {
     console.error("Dashboard candidates error:", e);
-    return NextResponse.json(mockCandidates);
+    return NextResponse.json([]);
   }
 }

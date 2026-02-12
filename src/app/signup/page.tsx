@@ -143,24 +143,24 @@ export default function SignupPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Account type</label>
-                <div className="grid grid-cols-3 gap-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">I want to...</label>
+                <div className="grid grid-cols-2 gap-2">
                   {[
-                    { value: "employer", label: "Employer" },
-                    { value: "educator", label: "Educator" },
-                    { value: "individual", label: "Individual" },
+                    { value: "employer", label: "Hire & Assess", desc: "Create tests, review candidates" },
+                    { value: "candidate", label: "Take Tests", desc: "Build my PromptScore™" },
                   ].map((type) => (
                     <button
                       key={type.value}
                       type="button"
                       onClick={() => setAccountType(type.value)}
-                      className={`py-2 px-3 rounded-md text-sm font-medium border transition-colors ${
+                      className={`py-3 px-3 rounded-md text-left border transition-colors ${
                         accountType === type.value
-                          ? "border-[#6366F1] bg-[#6366F1]/10 text-[#6366F1]"
-                          : "border-gray-200 text-gray-600 hover:border-gray-300"
+                          ? "border-[#6366F1] bg-[#6366F1]/10"
+                          : "border-gray-200 hover:border-gray-300"
                       }`}
                     >
-                      {type.label}
+                      <div className={`text-sm font-medium ${accountType === type.value ? "text-[#6366F1]" : "text-gray-700"}`}>{type.label}</div>
+                      <div className="text-xs text-gray-400 mt-0.5">{type.desc}</div>
                     </button>
                   ))}
                 </div>

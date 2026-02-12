@@ -199,6 +199,26 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ─── Job Board Teaser ─── */}
+        <section className="relative">
+          <div className="relative max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28">
+            <div className="text-center mb-12">
+              <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">Jobs</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-3">
+                Open Roles — Apply by completing a test
+              </h2>
+              <p className="text-sm text-gray-500 max-w-md mx-auto">
+                Companies are hiring based on real AI skills. Take a test, get a PromptScore, land the role.
+              </p>
+            </div>
+            <div className="text-center">
+              <Link href="/jobs" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
+                Browse Open Roles →
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ─── Final CTA ─── */}
         <section className="relative">
           <div className="absolute inset-0 dot-grid opacity-15" />

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getSql } from "@/lib/db";
-import { dashboardStats } from "@/lib/mockData";
 
 export async function GET() {
   try {
@@ -38,7 +37,11 @@ export async function GET() {
     });
   } catch (e) {
     console.error("Dashboard stats error:", e);
-    // Fallback to mock data
-    return NextResponse.json(dashboardStats);
+    return NextResponse.json({
+      testsCreated: 0,
+      candidatesTested: 0,
+      avgPromptScore: 0,
+      totalTokensUsed: 0,
+    });
   }
 }

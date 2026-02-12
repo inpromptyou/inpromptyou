@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ds } from "@/lib/designSystem";
 
 const steps = ["Basics", "Task", "Settings", "Scoring", "Review"];
 const TEST_TYPES = [
-  { value: "email", label: "Email", desc: "Write professional emails" },
-  { value: "code", label: "Code", desc: "Debug or generate code" },
-  { value: "data", label: "Data", desc: "Analyze or transform data" },
-  { value: "creative", label: "Creative", desc: "Creative writing tasks" },
-  { value: "custom", label: "Custom", desc: "Define your own task" },
+  { value: "email", label: "Email", desc: "Professional emails" },
+  { value: "code", label: "Code", desc: "Debug or generate" },
+  { value: "data", label: "Data", desc: "Analyze & transform" },
+  { value: "creative", label: "Creative", desc: "Creative writing" },
+  { value: "custom", label: "Custom", desc: "Define your own" },
 ];
 const DIFFICULTIES = ["beginner", "intermediate", "advanced", "expert"];
 
@@ -35,16 +36,9 @@ export default function CreateTestPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [form, setForm] = useState<FormState>({
-    title: "",
-    description: "",
-    taskPrompt: "",
-    expectedOutcomes: "",
-    testType: "custom",
-    difficulty: "intermediate",
-    timeLimitMinutes: 15,
-    maxAttempts: 5,
-    tokenBudget: 2000,
-    model: "gpt-4o",
+    title: "", description: "", taskPrompt: "", expectedOutcomes: "",
+    testType: "custom", difficulty: "intermediate",
+    timeLimitMinutes: 15, maxAttempts: 5, tokenBudget: 2000, model: "gpt-4o",
     scoringWeights: { accuracy: 40, efficiency: 30, speed: 30 },
   });
 
@@ -54,10 +48,7 @@ export default function CreateTestPage() {
   };
 
   const updateWeight = (key: string, value: number) => {
-    setForm((prev) => ({
-      ...prev,
-      scoringWeights: { ...prev.scoringWeights, [key]: value },
-    }));
+    setForm((prev) => ({ ...prev, scoringWeights: { ...prev.scoringWeights, [key]: value } }));
   };
 
   const validateStep = (s: number): boolean => {
@@ -72,136 +63,97 @@ export default function CreateTestPage() {
     return Object.keys(errs).length === 0;
   };
 
-  const goNext = () => {
-    if (validateStep(step)) setStep(step + 1);
-  };
+  const goNext = () => { if (validateStep(step)) setStep(step + 1); };
 
   const handleSubmit = async (status: "draft" | "active") => {
-    if (!validateStep(0) || !validateStep(1)) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
+    if (!validateStep(0) || !validateStep(1)) { setError("Please fill in all required fields."); return; }
+    setLoading(true); setError("");
     try {
-      const res = await fetch("/api/tests/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, status }),
-      });
-
+      const res = await fetch("/api/tests/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, status }) });
       const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Failed to create test");
-        setLoading(false);
-        return;
-      }
-
+      if (!res.ok) { setError(data.error || "Failed to create test"); setLoading(false); return; }
       router.push(`/dashboard/tests/${data.id}`);
-    } catch {
-      setError("Something went wrong. Please try again.");
-      setLoading(false);
-    }
+    } catch { setError("Something went wrong. Please try again."); setLoading(false); }
   };
 
   const modelLabel = form.model === "gpt-4o" ? "GPT-4o" : form.model === "claude" ? "Claude" : "Gemini";
   const weightsTotal = form.scoringWeights.accuracy + form.scoringWeights.efficiency + form.scoringWeights.speed;
 
   return (
-    <div className="p-6 lg:p-8 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Create New Test</h1>
-        <p className="text-gray-600 text-sm mt-1">Build an AI prompting assessment</p>
+    <div className={`${ds.page} max-w-[800px]`}>
+      <div className="mb-10">
+        <h1 className={ds.pageTitle}>Create New Test</h1>
+        <p className={ds.pageSubtitle}>Build an AI prompting assessment</p>
       </div>
 
-      {/* Progress */}
-      <div className="flex items-center gap-2 mb-10">
+      {/* Progress steps */}
+      <div className="flex items-center gap-1 mb-10">
         {steps.map((s, i) => (
-          <div key={s} className="flex items-center gap-2 flex-1">
+          <div key={s} className="flex items-center gap-1 flex-1">
             <button
               onClick={() => { if (i < step || validateStep(step)) setStep(i); }}
-              className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                i === step ? "text-[#6366F1]" : i < step ? "text-[#10B981]" : "text-gray-400"
+              className={`flex items-center gap-2 text-[12px] font-medium transition-all duration-200 ${
+                i === step ? "text-indigo-600" : i < step ? "text-emerald-600" : "text-gray-300"
               }`}
             >
-              <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                i === step ? "bg-[#6366F1] text-white" : i < step ? "bg-[#10B981] text-white" : "bg-gray-200 text-gray-500"
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-semibold transition-all duration-200 ${
+                i === step ? "bg-indigo-600 text-white" : i < step ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-400"
               }`}>
                 {i < step ? (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
                 ) : i + 1}
               </span>
               <span className="hidden sm:inline">{s}</span>
             </button>
-            {i < steps.length - 1 && <div className={`flex-1 h-px ${i < step ? "bg-[#10B981]" : "bg-gray-200"}`} />}
+            {i < steps.length - 1 && <div className={`flex-1 h-px transition-colors duration-300 ${i < step ? "bg-emerald-400" : "bg-gray-100"}`} />}
           </div>
         ))}
       </div>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3 mb-6">{error}</div>
+        <div className="text-[13px] text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3 mb-6">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-8">
+      <div className={`${ds.card} p-7`}>
         {/* Step 1: Basics */}
         {step === 0 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Test Basics</h2>
+            <h2 className={ds.sectionTitle}>Test Basics</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Test Title *</label>
-              <input
-                type="text"
-                value={form.title}
-                onChange={(e) => update("title", e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent ${fieldErrors.title ? "border-red-300" : "border-gray-300"}`}
-                placeholder="e.g., Write a Marketing Email"
-              />
-              {fieldErrors.title && <p className="text-xs text-red-500 mt-1">{fieldErrors.title}</p>}
+              <label className={ds.inputLabel}>Test Title *</label>
+              <input type="text" value={form.title} onChange={(e) => update("title", e.target.value)}
+                className={`${ds.input} ${fieldErrors.title ? "border-red-300 focus:ring-red-200" : ""}`}
+                placeholder="e.g., Write a Marketing Email" />
+              {fieldErrors.title && <p className={ds.inputError}>{fieldErrors.title}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                value={form.description}
-                onChange={(e) => update("description", e.target.value)}
-                rows={3}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none"
-                placeholder="Brief description of what this test evaluates..."
-              />
+              <label className={ds.inputLabel}>Description</label>
+              <textarea value={form.description} onChange={(e) => update("description", e.target.value)} rows={3}
+                className={`${ds.input} resize-none`} placeholder="Brief description of what this test evaluates…" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Test Type *</label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <label className={`${ds.inputLabel} mb-2.5`}>Test Type *</label>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                 {TEST_TYPES.map((t) => (
-                  <button
-                    key={t.value}
-                    type="button"
-                    onClick={() => update("testType", t.value)}
-                    className={`p-3 rounded-lg border-2 text-left transition-colors ${
-                      form.testType === t.value ? "border-[#6366F1] bg-[#6366F1]/10" : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="font-medium text-sm text-gray-900">{t.label}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{t.desc}</div>
+                  <button key={t.value} type="button" onClick={() => update("testType", t.value)}
+                    className={`p-3 rounded-lg border text-left transition-all duration-200 ${
+                      form.testType === t.value ? "border-indigo-400 bg-indigo-50/50 shadow-sm shadow-indigo-600/5" : "border-gray-200 hover:border-gray-300"
+                    }`}>
+                    <div className="font-medium text-[13px] text-gray-900">{t.label}</div>
+                    <div className="text-[11px] text-gray-400 mt-0.5">{t.desc}</div>
                   </button>
                 ))}
               </div>
-              {fieldErrors.testType && <p className="text-xs text-red-500 mt-1">{fieldErrors.testType}</p>}
+              {fieldErrors.testType && <p className={ds.inputError}>{fieldErrors.testType}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty Level</label>
+              <label className={`${ds.inputLabel} mb-2.5`}>Difficulty</label>
               <div className="flex gap-2">
                 {DIFFICULTIES.map((d) => (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={() => update("difficulty", d)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                      form.difficulty === d ? "border-[#6366F1] bg-[#6366F1]/10 text-[#6366F1]" : "border-gray-200 text-gray-600 hover:border-gray-300"
-                    }`}
-                  >
+                  <button key={d} type="button" onClick={() => update("difficulty", d)}
+                    className={`px-3.5 py-1.5 rounded-md text-[12px] font-medium border transition-all duration-200 ${
+                      form.difficulty === d ? "border-indigo-400 bg-indigo-50/50 text-indigo-600" : "border-gray-200 text-gray-500 hover:border-gray-300"
+                    }`}>
                     {d.charAt(0).toUpperCase() + d.slice(1)}
                   </button>
                 ))}
@@ -213,48 +165,35 @@ export default function CreateTestPage() {
         {/* Step 2: Task */}
         {step === 1 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Define the Task</h2>
+            <h2 className={ds.sectionTitle}>Define the Task</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Task Prompt (what candidates see) *</label>
-              <p className="text-xs text-gray-500 mb-2">Be specific about what candidates need to accomplish using AI.</p>
-              <textarea
-                value={form.taskPrompt}
-                onChange={(e) => update("taskPrompt", e.target.value)}
-                rows={6}
-                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none ${fieldErrors.taskPrompt ? "border-red-300" : "border-gray-300"}`}
-                placeholder="Describe the task in detail..."
-              />
-              {fieldErrors.taskPrompt && <p className="text-xs text-red-500 mt-1">{fieldErrors.taskPrompt}</p>}
+              <label className={ds.inputLabel}>Task Prompt *</label>
+              <p className="text-[11px] text-gray-400 mb-2">What candidates will see and need to accomplish.</p>
+              <textarea value={form.taskPrompt} onChange={(e) => update("taskPrompt", e.target.value)} rows={6}
+                className={`${ds.input} resize-none ${fieldErrors.taskPrompt ? "border-red-300 focus:ring-red-200" : ""}`}
+                placeholder="Describe the task in detail…" />
+              {fieldErrors.taskPrompt && <p className={ds.inputError}>{fieldErrors.taskPrompt}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Expected Outcomes</label>
-              <p className="text-xs text-gray-500 mb-2">Describe what a successful result looks like. Used for scoring.</p>
-              <textarea
-                value={form.expectedOutcomes}
-                onChange={(e) => update("expectedOutcomes", e.target.value)}
-                rows={4}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none"
-                placeholder="What does a high-quality output look like?"
-              />
+              <label className={ds.inputLabel}>Expected Outcomes</label>
+              <p className="text-[11px] text-gray-400 mb-2">What a successful result looks like. Used for scoring.</p>
+              <textarea value={form.expectedOutcomes} onChange={(e) => update("expectedOutcomes", e.target.value)} rows={4}
+                className={`${ds.input} resize-none`} placeholder="What does a high-quality output look like?" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">AI Model</label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label className={`${ds.inputLabel} mb-2.5`}>AI Model</label>
+              <div className="grid grid-cols-3 gap-2.5">
                 {[
                   { value: "gpt-4o", name: "GPT-4o", provider: "OpenAI" },
                   { value: "claude", name: "Claude", provider: "Anthropic" },
                   { value: "gemini", name: "Gemini", provider: "Google" },
                 ].map((m) => (
-                  <button
-                    key={m.value}
-                    type="button"
-                    onClick={() => update("model", m.value)}
-                    className={`p-4 rounded-lg border-2 text-left transition-colors ${
-                      form.model === m.value ? "border-[#6366F1] bg-[#6366F1]/10" : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="font-semibold text-sm text-gray-900">{m.name}</div>
-                    <div className="text-xs text-gray-500">{m.provider}</div>
+                  <button key={m.value} type="button" onClick={() => update("model", m.value)}
+                    className={`p-3.5 rounded-lg border text-left transition-all duration-200 ${
+                      form.model === m.value ? "border-indigo-400 bg-indigo-50/50 shadow-sm shadow-indigo-600/5" : "border-gray-200 hover:border-gray-300"
+                    }`}>
+                    <div className="font-medium text-[13px] text-gray-900">{m.name}</div>
+                    <div className="text-[11px] text-gray-400">{m.provider}</div>
                   </button>
                 ))}
               </div>
@@ -265,26 +204,20 @@ export default function CreateTestPage() {
         {/* Step 3: Settings */}
         {step === 2 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Test Settings</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Max Attempts</label>
-                <input type="number" value={form.maxAttempts} onChange={(e) => update("maxAttempts", parseInt(e.target.value) || 1)} min={1} max={20}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
-                <p className="text-xs text-gray-500 mt-1">Number of prompts allowed</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Time Limit (minutes)</label>
-                <input type="number" value={form.timeLimitMinutes} onChange={(e) => update("timeLimitMinutes", parseInt(e.target.value) || 5)} min={1} max={120}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
-                <p className="text-xs text-gray-500 mt-1">Total time to complete</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Token Budget</label>
-                <input type="number" value={form.tokenBudget} onChange={(e) => update("tokenBudget", parseInt(e.target.value) || 500)} min={100} max={50000} step={500}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
-                <p className="text-xs text-gray-500 mt-1">Max tokens across all prompts</p>
-              </div>
+            <h2 className={ds.sectionTitle}>Test Settings</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {[
+                { label: "Max Attempts", field: "maxAttempts", value: form.maxAttempts, min: 1, max: 20, hint: "Prompts allowed" },
+                { label: "Time Limit (min)", field: "timeLimitMinutes", value: form.timeLimitMinutes, min: 1, max: 120, hint: "Total time" },
+                { label: "Token Budget", field: "tokenBudget", value: form.tokenBudget, min: 100, max: 50000, step: 500, hint: "All prompts combined" },
+              ].map((s) => (
+                <div key={s.field}>
+                  <label className={ds.inputLabel}>{s.label}</label>
+                  <input type="number" value={s.value} onChange={(e) => update(s.field, parseInt(e.target.value) || s.min)} min={s.min} max={s.max} step={s.step}
+                    className={ds.input} />
+                  <p className="text-[11px] text-gray-400 mt-1">{s.hint}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -292,23 +225,23 @@ export default function CreateTestPage() {
         {/* Step 4: Scoring */}
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Scoring Weights</h2>
-            <p className="text-sm text-gray-600">Customize how candidates are scored. Weights should sum to 100.</p>
+            <h2 className={ds.sectionTitle}>Scoring Weights</h2>
+            <p className="text-[13px] text-gray-500">Weights should sum to 100.</p>
             {weightsTotal !== 100 && (
-              <div className="text-sm text-amber-600 bg-amber-50 border border-amber-100 rounded-md px-3 py-2">
-                Weights sum to {weightsTotal} — they should total 100.
+              <div className="text-[12px] text-amber-600 bg-amber-50 border border-amber-100 rounded-md px-3 py-2">
+                Current total: {weightsTotal} — should be 100.
               </div>
             )}
-            <div className="space-y-4">
+            <div className="space-y-5">
               {(["accuracy", "efficiency", "speed"] as const).map((key) => (
-                <div key={key} className="flex items-center gap-4">
-                  <label className="text-sm font-medium text-gray-700 w-24 capitalize">{key}</label>
-                  <input
-                    type="range" min={0} max={100} value={form.scoringWeights[key]}
+                <div key={key}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[13px] font-medium text-gray-700 capitalize">{key}</label>
+                    <span className="text-[12px] font-mono text-gray-500">{form.scoringWeights[key]}%</span>
+                  </div>
+                  <input type="range" min={0} max={100} value={form.scoringWeights[key]}
                     onChange={(e) => updateWeight(key, parseInt(e.target.value))}
-                    className="flex-1"
-                  />
-                  <span className="text-sm font-mono text-gray-600 w-10 text-right">{form.scoringWeights[key]}%</span>
+                    className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600" />
                 </div>
               ))}
             </div>
@@ -318,75 +251,66 @@ export default function CreateTestPage() {
         {/* Step 5: Review */}
         {step === 4 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Review &amp; Publish</h2>
+            <h2 className={ds.sectionTitle}>Review &amp; Publish</h2>
 
-            <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><span className="text-gray-500">Title</span><p className="font-medium text-gray-900 mt-0.5">{form.title || "Untitled"}</p></div>
-                <div><span className="text-gray-500">Type</span><p className="font-medium text-gray-900 mt-0.5 capitalize">{form.testType}</p></div>
-                <div><span className="text-gray-500">Difficulty</span><p className="font-medium text-gray-900 mt-0.5 capitalize">{form.difficulty}</p></div>
-                <div><span className="text-gray-500">AI Model</span><p className="font-medium text-gray-900 mt-0.5">{modelLabel}</p></div>
-                <div><span className="text-gray-500">Time Limit</span><p className="font-medium text-gray-900 mt-0.5">{form.timeLimitMinutes}m</p></div>
-                <div><span className="text-gray-500">Max Attempts</span><p className="font-medium text-gray-900 mt-0.5">{form.maxAttempts}</p></div>
-                <div><span className="text-gray-500">Token Budget</span><p className="font-medium text-gray-900 mt-0.5">{form.tokenBudget.toLocaleString()}</p></div>
-                <div><span className="text-gray-500">Scoring</span><p className="font-medium text-gray-900 mt-0.5">A:{form.scoringWeights.accuracy} E:{form.scoringWeights.efficiency} S:{form.scoringWeights.speed}</p></div>
-              </div>
-              {form.description && <div className="text-sm"><span className="text-gray-500">Description</span><p className="text-gray-900 mt-0.5">{form.description}</p></div>}
-              {form.taskPrompt && <div className="text-sm"><span className="text-gray-500">Task Prompt</span><p className="text-gray-900 mt-0.5 whitespace-pre-wrap">{form.taskPrompt}</p></div>}
-              {form.expectedOutcomes && <div className="text-sm"><span className="text-gray-500">Expected Outcomes</span><p className="text-gray-900 mt-0.5">{form.expectedOutcomes}</p></div>}
+            <div className="space-y-3">
+              {[
+                { label: "Title", value: form.title || "Untitled" },
+                { label: "Type", value: form.testType },
+                { label: "Difficulty", value: form.difficulty },
+                { label: "Model", value: modelLabel },
+                { label: "Time", value: `${form.timeLimitMinutes}m` },
+                { label: "Attempts", value: form.maxAttempts.toString() },
+                { label: "Token Budget", value: form.tokenBudget.toLocaleString() },
+                { label: "Scoring", value: `A:${form.scoringWeights.accuracy} E:${form.scoringWeights.efficiency} S:${form.scoringWeights.speed}` },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center justify-between py-1.5 border-b border-gray-50 last:border-0">
+                  <span className="text-[13px] text-gray-400">{row.label}</span>
+                  <span className="text-[13px] text-gray-900 capitalize font-medium">{row.value}</span>
+                </div>
+              ))}
             </div>
 
-            {/* Candidate Preview */}
-            <div className="border border-dashed border-gray-300 rounded-lg p-6">
-              <div className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">Candidate Preview</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">{form.title || "Untitled Test"}</h3>
-              <p className="text-sm text-gray-600 mb-3">{form.description || "No description."}</p>
-              <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
-                <span>Model: {modelLabel}</span>
-                <span>Time: {form.timeLimitMinutes}m</span>
-                <span>Attempts: {form.maxAttempts}</span>
+            {form.taskPrompt && (
+              <div>
+                <div className={`${ds.sectionLabel} mb-2`}>Task Prompt</div>
+                <div className="bg-gray-50 rounded-lg p-4 text-[13px] text-gray-700 whitespace-pre-wrap border border-gray-100 leading-relaxed">
+                  {form.taskPrompt}
+                </div>
+              </div>
+            )}
+
+            {/* Candidate preview */}
+            <div className="border border-dashed border-gray-200 rounded-lg p-5">
+              <div className={`${ds.sectionLabel} mb-3`}>Candidate Preview</div>
+              <h3 className="text-[16px] font-semibold text-gray-900 mb-1">{form.title || "Untitled Test"}</h3>
+              <p className="text-[13px] text-gray-500 mb-3">{form.description || "No description."}</p>
+              <div className="flex flex-wrap gap-4 text-[12px] text-gray-400">
+                <span>{modelLabel}</span>
+                <span>{form.timeLimitMinutes}m</span>
+                <span>{form.maxAttempts} attempts</span>
                 <span className="capitalize">{form.difficulty}</span>
               </div>
-              {form.taskPrompt && (
-                <div className="bg-white border border-gray-200 rounded-md p-4">
-                  <div className="text-xs text-gray-400 mb-2 font-medium">YOUR TASK</div>
-                  <p className="text-sm text-gray-700 whitespace-pre-wrap">{form.taskPrompt}</p>
-                </div>
-              )}
             </div>
           </div>
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
-          <button
-            onClick={() => setStep(Math.max(0, step - 1))}
-            className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              step === 0 ? "invisible" : "text-gray-600 border border-gray-300 hover:bg-gray-50"
-            }`}
-          >
-            Back
-          </button>
-          <div className="flex gap-3">
+        <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
+          <button onClick={() => setStep(Math.max(0, step - 1))}
+            className={step === 0 ? "invisible" : ds.btnSecondary}>Back</button>
+          <div className="flex gap-2.5">
             {step < steps.length - 1 ? (
-              <button onClick={goNext} className="px-6 py-2.5 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-sm font-medium transition-colors">
-                Continue
-              </button>
+              <button onClick={goNext} className={ds.btnPrimary}>Continue</button>
             ) : (
               <>
-                <button
-                  onClick={() => handleSubmit("draft")}
-                  disabled={loading}
-                  className="px-6 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-60 rounded-lg text-sm font-medium transition-colors"
-                >
-                  {loading ? "Saving..." : "Save as Draft"}
+                <button onClick={() => handleSubmit("draft")} disabled={loading}
+                  className={`${ds.btnSecondary} disabled:opacity-50`}>
+                  {loading ? "Saving…" : "Save Draft"}
                 </button>
-                <button
-                  onClick={() => handleSubmit("active")}
-                  disabled={loading}
-                  className="px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] disabled:opacity-60 text-white rounded-lg text-sm font-medium transition-colors"
-                >
-                  {loading ? "Publishing..." : "Publish Test"}
+                <button onClick={() => handleSubmit("active")} disabled={loading}
+                  className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-md px-4 py-2 text-[13px] font-medium transition-all duration-200">
+                  {loading ? "Publishing…" : "Publish Test"}
                 </button>
               </>
             )}

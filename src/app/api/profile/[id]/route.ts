@@ -1,68 +1,46 @@
-import { NextRequest, NextResponse } from "next/server";
 import { getSql } from "@/lib/db";
+import { NextResponse } from "next/server";
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
+    const userId = Number(id);
+    if (isNaN(userId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+
     const sql = getSql();
-
-    // Try to find user
-    const users = await sql`SELECT id, name, avatar_url, created_at FROM users WHERE id = ${id}`;
-    
-    if (users.length === 0) {
-      // Fallback: try to find by leaderboard position (for links from leaderboard page)
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
-    }
-
-    const user = users[0];
-
-    // Get test history
-    const history = await sql`
-      SELECT
-        t.title as name,
-        COALESCE(ta.score, 0)::int as score,
-        ta.tokens_used as tokens,
-        ta.attempts_used as attempts,
-        ta.completed_at as date
-      FROM test_attempts ta
-      JOIN tests t ON ta.test_id = t.id
-      WHERE ta.candidate_email = (SELECT email FROM users WHERE id = ${id})
-        AND ta.status = 'completed'
-      ORDER BY ta.completed_at DESC
-      LIMIT 20
+    const rows = await sql`
+      SELECT id, name, email, avatar_url, bio, work_history, linkedin_url, skills_tags,
+             role, prompt_score, created_at
+      FROM users WHERE id = ${userId}
     `;
 
-    // Aggregate stats
-    const [stats] = await sql`
-      SELECT
-        COUNT(*)::int as tests,
-        COALESCE(AVG(ta.score), 0)::int as avg_score,
-        COALESCE(AVG(ta.tokens_used), 0)::int as avg_tokens,
-        COALESCE(AVG(ta.attempts_used), 0)::numeric(3,1) as avg_attempts
+    if (rows.length === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    const user = rows[0];
+
+    // Get test history
+    const testHistory = await sql`
+      SELECT t.title as "testName", ta.score, ta.completed_at as "completedAt"
       FROM test_attempts ta
-      WHERE ta.candidate_email = (SELECT email FROM users WHERE id = ${id})
-        AND ta.status = 'completed'
+      JOIN tests t ON ta.test_id = t.id
+      WHERE (ta.user_id = ${userId} OR ta.candidate_email = ${user.email}) AND ta.status = 'completed'
+      ORDER BY ta.completed_at DESC
+      LIMIT 10
     `;
 
     return NextResponse.json({
-      name: user.name,
-      score: stats.avg_score || 0,
-      tests: stats.tests || 0,
-      joinedDate: new Date(user.created_at as string).toLocaleDateString("en-US", { month: "long", year: "numeric" }),
-      avgTokens: stats.avg_tokens || 0,
-      avgAttempts: Number(stats.avg_attempts) || 0,
-      badges: (stats.avg_score || 0) >= 80 ? ["Top 10%"] : [],
-      testHistory: history.map((h) => ({
-        name: h.name,
-        score: h.score,
-        date: h.date ? new Date(h.date as string).toISOString().split("T")[0] : "",
-        tokens: h.tokens || 0,
-        attempts: h.attempts || 0,
+      ...user,
+      testHistory: testHistory.map(r => ({
+        testName: r.testName,
+        score: Number(r.score) || 0,
+        completedAt: r.completedAt ? new Date(r.completedAt as string).toISOString().split("T")[0] : "",
       })),
-      categoryScores: [],
     });
   } catch (e) {
-    console.error("Profile error:", e);
-    return NextResponse.json({ error: "Failed to load profile" }, { status: 500 });
+    console.error("Get profile error:", e);
+    return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }
 }

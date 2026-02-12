@@ -454,3 +454,128 @@ All references updated across the codebase:
 px tsc --noEmit — no errors)
 - All components responsive (mobile-first grid patterns)
 - Animations: scroll-triggered score counter, CSS transition bars, no bounce/spin
+
+---
+
+# Build Log — Major Feature Batch (7 Items)
+
+**Date:** 12 Feb 2026
+**Builder:** Banks (subagent: major-features-batch)
+
+---
+
+## Items Implemented
+
+### ITEM 1: Fix Test Publishing
+- Tests now properly save to DB via `/api/tests/create` (already worked, verified)
+- Added `PATCH /api/tests/[id]` endpoint for publish/unpublish toggle
+- Test detail page now shows Publish/Unpublish button and Copy Share Link
+- Share link section appears when test is active
+- Tests appear in the creator's dashboard list with correct status badges
+
+### ITEM 2: Guest Mode (Take Tests Without Account)
+- `GET /api/tests/[id]` now serves active tests publicly (no auth required)
+- Test landing page (`/test/[id]`) requires name + email, no login needed
+- Guest info stored in sessionStorage for the sandbox
+- After results, banner prompts: "Create an account to save your PromptScore"
+- Signup API accepts `linkGuestEmail` param to link guest results to new account
+- `test_attempts` table has `user_id` column for linking
+
+### ITEM 3: Remove ALL Mock Data from User-Facing Pages
+- Dashboard home: fetches real stats, shows proper empty states
+- Candidates page: real data only, empty state when no candidates
+- Dashboard stats API: no mock fallback, returns zeros
+- Dashboard candidates API: no mock fallback, returns empty array
+- Test landing page: fetches from DB, shows "not found" if missing
+- Sandbox page: loads test from DB, no mockTests dependency
+- Results page: no mockTests/mockCandidates imports
+- Profile page: fetches from DB, no fallback mock data
+- mockData.ts kept as seed/reference file only
+
+### ITEM 4: Job Board
+- New DB table: `jobs` (id, creator_id, title, company, description, location, salary_range, required_score, test_id, is_active, created_at)
+- `GET /api/jobs` — lists active jobs publicly
+- `POST /api/jobs/create` — create job (auth required)
+- `/jobs` — public job board page with listings
+- `/dashboard/jobs` — employer page to create/manage job listings
+- Jobs link test_id so "Apply" goes to `/test/:id`
+- Homepage has "Open Roles" section linking to `/jobs`
+- Nav updated with Jobs link
+
+### ITEM 5: Profile Enhancements
+- User table extended: bio, work_history, linkedin_url, skills_tags, account_type
+- `GET /api/profile` — get own profile
+- `PUT /api/profile` — update profile fields
+- `GET /api/profile/completeness` — returns percentage based on field weights
+- `GET /api/profile/[id]` — public profile with test history
+- `/dashboard/profile` — edit profile page with completeness bar
+- Profile completeness banner on dashboard if < 80%
+
+### ITEM 6: API Integration for Businesses
+- New DB table: `api_keys` (id, user_id, key_hash, key_prefix, name, plan, rate_limit, requests_today, is_active, created_at)
+- `GET/POST /api/keys` — list/generate API keys (Pro/Business plan required)
+- `DELETE /api/keys/[id]` — revoke key
+- `src/lib/api-auth.ts` — Bearer token authentication middleware
+- `POST /api/v1/tests/create` — create test programmatically
+- `GET /api/v1/tests/[id]/results` — get test results
+- `POST /api/v1/tests/[id]/invite` — send test invitation
+- All v1 routes check API key + subscription plan
+- `/dashboard/api` — API key management page with documentation, cURL examples
+
+### ITEM 7: Role-Based Dashboards
+- Signup page: "Employer" / "Candidate" role selection (replaces old 3-option)
+- Role stored in DB (role + account_type fields)
+- Auth callbacks pass role to session
+- `DashboardLayout.tsx` — different sidebar nav based on role:
+  - **Employer**: Dashboard, Create Test, My Tests, Candidates, Jobs, API, Settings
+  - **Candidate**: Dashboard, Job Board, My Results, Profile, Settings
+- Dashboard home page: role-aware content
+  - Employer: stats cards, quick actions, recent results table
+  - Candidate: PromptScore summary, recent test results
+- `/dashboard/results` — candidate's test history page
+- `/dashboard/profile` — candidate's profile edit page
+- `GET /api/candidate/stats` — candidate's PromptScore + recent results
+
+## Files Created (19 new files)
+- `src/app/api/jobs/route.ts`
+- `src/app/api/jobs/create/route.ts`
+- `src/app/api/profile/route.ts`
+- `src/app/api/profile/completeness/route.ts`
+- `src/app/api/profile/[id]/route.ts`
+- `src/app/api/candidate/stats/route.ts`
+- `src/app/api/keys/route.ts`
+- `src/app/api/keys/[id]/route.ts`
+- `src/app/api/v1/tests/create/route.ts`
+- `src/app/api/v1/tests/[id]/results/route.ts`
+- `src/app/api/v1/tests/[id]/invite/route.ts`
+- `src/lib/api-auth.ts`
+- `src/app/jobs/page.tsx`
+- `src/app/dashboard/jobs/page.tsx`
+- `src/app/dashboard/api/page.tsx`
+- `src/app/dashboard/profile/page.tsx`
+- `src/app/dashboard/results/page.tsx`
+
+## Files Modified (15 files)
+- `src/lib/schema.ts` — added jobs, api_keys tables + user profile columns
+- `src/app/api/auth/signup/route.ts` — stores role, links guest results
+- `src/app/api/tests/[id]/route.ts` — public access for active tests + PATCH
+- `src/app/api/dashboard/stats/route.ts` — removed mock fallback
+- `src/app/api/dashboard/candidates/route.ts` — removed mock fallback
+- `src/app/dashboard/page.tsx` — role-based, real data, empty states
+- `src/app/dashboard/candidates/page.tsx` — removed mock data
+- `src/app/dashboard/tests/[id]/page.tsx` — publish toggle + share link
+- `src/app/test/[id]/page.tsx` — guest mode, real DB data
+- `src/app/test/[id]/sandbox/page.tsx` — real DB data, no mock dependency
+- `src/app/test/[id]/results/page.tsx` — no mock data, signup prompt
+- `src/app/profile/[id]/page.tsx` — real DB data, no mock fallback
+- `src/app/signup/page.tsx` — employer/candidate role selection
+- `src/components/DashboardLayout.tsx` — role-based navigation
+- `src/components/Nav.tsx` — added Jobs link
+- `src/app/page.tsx` — added Job Board section
+
+## Verification
+- TypeScript compilation: clean (zero errors)
+- All 7 items implemented cohesively
+- Dark indigo theme maintained
+- Proper empty states throughout
+- Mobile responsive (existing patterns followed)

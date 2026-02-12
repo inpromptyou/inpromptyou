@@ -2,60 +2,87 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
-import { mockTests } from "@/lib/mockData";
+import { useRouter } from "next/navigation";
 
 interface TestData {
   id: string;
-  name: string;
+  title: string;
   description: string;
   model: string;
-  taskDescription: string;
-  maxAttempts: number;
-  timeLimitMinutes: number;
-  tokenBudget: number;
+  task_prompt: string;
+  max_attempts: number;
+  time_limit_minutes: number;
+  token_budget: number;
 }
 
 export default function TestLandingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
-  // Try to load from mock data first, will attempt DB fetch
-  const mockTest = mockTests.find((t) => t.id === id) || mockTests[0];
-  const [test, setTest] = useState<TestData>({
-    id: mockTest.id,
-    name: mockTest.name,
-    description: mockTest.description,
-    model: mockTest.model,
-    taskDescription: mockTest.taskDescription,
-    maxAttempts: mockTest.maxAttempts,
-    timeLimitMinutes: mockTest.timeLimitMinutes,
-    tokenBudget: mockTest.tokenBudget,
-  });
+  const [test, setTest] = useState<TestData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
-    // Try fetching real test data from DB
     fetch(`/api/tests/${id}`)
       .then((r) => {
-        if (!r.ok) return null;
+        if (!r.ok) throw new Error("Test not found");
         return r.json();
       })
       .then((d) => {
         if (d && d.title) {
           setTest({
             id: d.id?.toString() || id,
-            name: d.title,
+            title: d.title,
             description: d.description || "",
-            model: d.model || "GPT-4o",
-            taskDescription: d.task_prompt || d.taskDescription || "",
-            maxAttempts: d.max_attempts || 5,
-            timeLimitMinutes: d.time_limit_minutes || 15,
-            tokenBudget: d.token_budget || 2000,
+            model: d.model || "gpt-4o",
+            task_prompt: d.task_prompt || "",
+            max_attempts: d.max_attempts || 5,
+            time_limit_minutes: d.time_limit_minutes || 15,
+            token_budget: d.token_budget || 2000,
           });
+        } else {
+          setError("Test not found");
         }
       })
-      .catch(() => {});
+      .catch(() => setError("Test not found or not available"))
+      .finally(() => setLoading(false));
   }, [id]);
+
+  const handleStart = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError("");
+
+    if (!name.trim()) { setFormError("Name is required"); return; }
+    if (!email.trim() || !email.includes("@")) { setFormError("Valid email is required"); return; }
+
+    // Store guest info in sessionStorage for the sandbox to use
+    sessionStorage.setItem(`guest-${id}`, JSON.stringify({ name: name.trim(), email: email.trim() }));
+    router.push(`/test/${id}/sandbox`);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-sm text-gray-400">Loading test...</div>
+      </div>
+    );
+  }
+
+  if (error || !test) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500 text-sm mb-4">{error || "Test not found"}</p>
+          <Link href="/" className="text-sm text-[#6366F1] hover:text-[#4F46E5] font-medium">← Back to Home</Link>
+        </div>
+      </div>
+    );
+  }
+
+  const modelLabel = test.model === "gpt-4o" ? "GPT-4o" : test.model === "claude" ? "Claude" : test.model === "gemini" ? "Gemini" : test.model;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -68,17 +95,17 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
 
       <div className="max-w-lg mx-auto px-5 py-14">
         <div className="mb-8">
-          <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{test.model}</span>
-          <h1 className="text-2xl font-bold text-gray-900 mt-1 mb-2">{test.name}</h1>
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{modelLabel}</span>
+          <h1 className="text-2xl font-bold text-gray-900 mt-1 mb-2">{test.title}</h1>
           <p className="text-sm text-gray-600 leading-relaxed">{test.description}</p>
         </div>
 
         <div className="grid grid-cols-4 gap-3 mb-8">
           {[
-            { label: "Time", value: `${test.timeLimitMinutes}m` },
-            { label: "Attempts", value: test.maxAttempts.toString() },
-            { label: "Tokens", value: test.tokenBudget.toLocaleString() },
-            { label: "Model", value: test.model },
+            { label: "Time", value: `${test.time_limit_minutes}m` },
+            { label: "Attempts", value: test.max_attempts.toString() },
+            { label: "Tokens", value: test.token_budget.toLocaleString() },
+            { label: "Model", value: modelLabel },
           ].map((info) => (
             <div key={info.label} className="bg-white rounded-md border border-gray-200 p-3 text-center">
               <div className="text-[10px] text-gray-400 uppercase tracking-wide">{info.label}</div>
@@ -105,10 +132,16 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
         </div>
 
         <div className="bg-white rounded-md border border-gray-200 p-5">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Enter your details to begin</h2>
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
+          <h2 className="text-sm font-semibold text-gray-900 mb-1">Enter your details to begin</h2>
+          <p className="text-xs text-gray-400 mb-3">No account required — just your name and email.</p>
+
+          {formError && (
+            <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2 mb-3">{formError}</div>
+          )}
+
+          <form onSubmit={handleStart} className="space-y-3">
             <div>
-              <label htmlFor="name" className="block text-xs font-medium text-gray-500 mb-1">Full Name</label>
+              <label htmlFor="name" className="block text-xs font-medium text-gray-500 mb-1">Full Name *</label>
               <input
                 id="name"
                 type="text"
@@ -119,7 +152,7 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-gray-500 mb-1">Email Address</label>
+              <label htmlFor="email" className="block text-xs font-medium text-gray-500 mb-1">Email Address *</label>
               <input
                 id="email"
                 type="email"
@@ -129,12 +162,12 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
                 placeholder="you@example.com"
               />
             </div>
-            <Link
-              href={`/test/${test.id}/sandbox`}
-              className="block w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white text-center py-2.5 rounded-md text-sm font-medium transition-colors"
+            <button
+              type="submit"
+              className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white text-center py-2.5 rounded-md text-sm font-medium transition-colors"
             >
               Start Test
-            </Link>
+            </button>
           </form>
           <p className="text-[11px] text-gray-400 mt-3 text-center">Your results will be shared with the test creator.</p>
         </div>
