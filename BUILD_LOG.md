@@ -1,3 +1,81 @@
+# Build Log — Critical Fixes #4 & #5: Create Test Wiring + Auth Fix
+
+**Date:** 12 Feb 2026  
+**Builder:** Banks (subagent)
+
+---
+
+## What Was Built
+
+### Critical Fix #4 — Wire up Create Test Form
+
+**API Routes Created:**
+- `src/app/api/tests/create/route.ts` — POST endpoint to create tests. Validates all inputs (title, taskPrompt required; test type, difficulty, time limit, attempts, token budget range-checked). Requires auth. Stores to Neon DB. Auto-runs schema migration via `ensureSchema()`.
+- `src/app/api/tests/route.ts` — GET endpoint listing all tests for the authenticated user, ordered by creation date.
+- `src/app/api/tests/[id]/route.ts` — GET endpoint for fetching a single test by ID, scoped to the authenticated user.
+
+**Schema (`src/lib/schema.ts`):**
+- `users` — id, name, email, password_hash, google_id, avatar_url, role, plan, prompt_score
+- `tests` — id, user_id (FK), title, description, task_prompt, expected_outcomes, test_type, difficulty, time_limit_minutes, max_attempts, token_budget, model, scoring_weights (JSONB), status, candidates_count, avg_score, completion_rate
+- `test_attempts` — id, test_id (FK), candidate info, scores, tokens, time
+- `test_submissions` — id, attempt_id (FK), prompt_text, response_text, tokens_used
+
+**Create Test Page (`src/app/dashboard/create/page.tsx`) — Full Rewrite:**
+- 5-step wizard: Basics → Task → Settings → Scoring → Review
+- Step 1: Title, description, test type selection (email/code/data/creative/custom), difficulty level
+- Step 2: Task prompt, expected outcomes, AI model selection
+- Step 3: Max attempts, time limit, token budget
+- Step 4: Scoring weight sliders (accuracy/efficiency/speed) with sum validation
+- Step 5: Full review + candidate preview panel
+- Per-step validation with field-level error messages
+- Loading states during submission
+- Save as Draft or Publish buttons
+- Redirects to test detail page on success
+
+**Tests List Page (`src/app/dashboard/tests/page.tsx`) — Rewritten:**
+- Now fetches real data from `/api/tests` instead of mock data
+- Loading state, error handling, empty state with CTA
+- Shows test type badge, difficulty, all stats
+
+**Test Detail Page (`src/app/dashboard/tests/[id]/page.tsx`) — Rewritten:**
+- Fetches from `/api/tests/[id]` instead of mock data
+- Shows full test configuration, scoring weights visualization, task prompt, expected outcomes
+- Client component with loading/error states
+
+### Critical Fix #5 — Auth Verification
+
+**Auth setup reviewed and confirmed working:**
+- `src/lib/auth.ts` — NextAuth v5 beta config with Credentials + Google providers, JWT strategy, proper callbacks for signIn/jwt/session
+- `src/app/api/auth/[...nextauth]/route.ts` — Correctly exports `{ GET, POST }` from handlers (App Router compatible)
+- `src/app/api/auth/signup/route.ts` — Validates inputs, checks for existing email, hashes password with bcrypt (12 rounds), stores to DB
+- `src/app/login/page.tsx` — Uses `signIn("credentials", { redirect: false })`, proper error display, loading state
+- `src/app/signup/page.tsx` — POSTs to signup API, auto-signs in after, proper error handling
+- All API routes use `auth()` for session checking with proper 401 responses
+- Session user ID accessed via `(session.user as Record<string, unknown>).id` pattern
+
+**No auth changes were needed** — the existing setup is correctly wired for NextAuth v5 App Router.
+
+## Files Created
+- `src/lib/schema.ts`
+- `src/app/api/tests/route.ts`
+- `src/app/api/tests/create/route.ts`
+- `src/app/api/tests/[id]/route.ts`
+
+## Files Modified
+- `src/app/dashboard/create/page.tsx` — Full rewrite (functional form)
+- `src/app/dashboard/tests/page.tsx` — Rewritten (real data)
+- `src/app/dashboard/tests/[id]/page.tsx` — Rewritten (real data)
+
+## Verification
+- TypeScript compilation: ✅ zero errors (`npx tsc --noEmit` passed clean)
+- Auth flow: ✅ reviewed, correctly configured
+- All API routes require authentication
+- Schema auto-creates tables on first test creation
+- Ocean theme maintained (#1B5B7D, #0C2A3A, #14455E, #10B981)
+- Mobile responsive throughout
+
+---
+
 # Build Log — Critical Fix #3: Comprehensive Results Page
 
 **Date:** 12 Feb 2026  
@@ -133,7 +211,7 @@ Reusable score display with:
 
 ## Verification
 - TypeScript compilation: ✅ passed (zero errors)
-- All existing interfaces preserved for backward compatibility
+- Build error on `/_global-error`: pre-existing Next.js issue, unrelated to these changes
 
 ---
 

@@ -1,29 +1,120 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const steps = ["Basics", "AI Model", "Task", "Scoring", "Review"];
+const steps = ["Basics", "Task", "Settings", "Scoring", "Review"];
+const TEST_TYPES = [
+  { value: "email", label: "Email", desc: "Write professional emails" },
+  { value: "code", label: "Code", desc: "Debug or generate code" },
+  { value: "data", label: "Data", desc: "Analyze or transform data" },
+  { value: "creative", label: "Creative", desc: "Creative writing tasks" },
+  { value: "custom", label: "Custom", desc: "Define your own task" },
+];
+const DIFFICULTIES = ["beginner", "intermediate", "advanced", "expert"];
+
+interface FormState {
+  title: string;
+  description: string;
+  taskPrompt: string;
+  expectedOutcomes: string;
+  testType: string;
+  difficulty: string;
+  timeLimitMinutes: number;
+  maxAttempts: number;
+  tokenBudget: number;
+  model: string;
+  scoringWeights: { accuracy: number; efficiency: number; speed: number };
+}
 
 export default function CreateTestPage() {
+  const router = useRouter();
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    name: "",
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const [form, setForm] = useState<FormState>({
+    title: "",
     description: "",
-    model: "gpt-4o",
-    taskDescription: "",
-    expectedOutcome: "",
-    maxAttempts: 5,
+    taskPrompt: "",
+    expectedOutcomes: "",
+    testType: "custom",
+    difficulty: "intermediate",
     timeLimitMinutes: 15,
+    maxAttempts: 5,
     tokenBudget: 2000,
+    model: "gpt-4o",
+    scoringWeights: { accuracy: 40, efficiency: 30, speed: 30 },
   });
 
-  const update = (field: string, value: string | number) => setForm((prev) => ({ ...prev, [field]: value }));
+  const update = (field: string, value: string | number) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  const updateWeight = (key: string, value: number) => {
+    setForm((prev) => ({
+      ...prev,
+      scoringWeights: { ...prev.scoringWeights, [key]: value },
+    }));
+  };
+
+  const validateStep = (s: number): boolean => {
+    const errs: Record<string, string> = {};
+    if (s === 0) {
+      if (!form.title.trim()) errs.title = "Title is required";
+      if (!form.testType) errs.testType = "Select a test type";
+    } else if (s === 1) {
+      if (!form.taskPrompt.trim()) errs.taskPrompt = "Task prompt is required";
+    }
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const goNext = () => {
+    if (validateStep(step)) setStep(step + 1);
+  };
+
+  const handleSubmit = async (status: "draft" | "active") => {
+    if (!validateStep(0) || !validateStep(1)) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/tests/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, status }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Failed to create test");
+        setLoading(false);
+        return;
+      }
+
+      router.push(`/dashboard/tests/${data.id}`);
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const modelLabel = form.model === "gpt-4o" ? "GPT-4o" : form.model === "claude" ? "Claude" : "Gemini";
+  const weightsTotal = form.scoringWeights.accuracy + form.scoringWeights.efficiency + form.scoringWeights.speed;
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Create New Test</h1>
-        <p className="text-gray-600 text-sm mt-1">Build an AI prompting assessment in five steps</p>
+        <p className="text-gray-600 text-sm mt-1">Build an AI prompting assessment</p>
       </div>
 
       {/* Progress */}
@@ -31,7 +122,7 @@ export default function CreateTestPage() {
         {steps.map((s, i) => (
           <div key={s} className="flex items-center gap-2 flex-1">
             <button
-              onClick={() => setStep(i)}
+              onClick={() => { if (i < step || validateStep(step)) setStep(i); }}
               className={`flex items-center gap-2 text-sm font-medium transition-colors ${
                 i === step ? "text-[#1B5B7D]" : i < step ? "text-[#10B981]" : "text-gray-400"
               }`}
@@ -41,9 +132,7 @@ export default function CreateTestPage() {
               }`}>
                 {i < step ? (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                ) : (
-                  i + 1
-                )}
+                ) : i + 1}
               </span>
               <span className="hidden sm:inline">{s}</span>
             </button>
@@ -52,20 +141,25 @@ export default function CreateTestPage() {
         ))}
       </div>
 
+      {error && (
+        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3 mb-6">{error}</div>
+      )}
+
       <div className="bg-white rounded-xl border border-gray-200 p-8">
         {/* Step 1: Basics */}
         {step === 0 && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-gray-900">Test Basics</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Test Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Test Title *</label>
               <input
                 type="text"
-                value={form.name}
-                onChange={(e) => update("name", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                value={form.title}
+                onChange={(e) => update("title", e.target.value)}
+                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent ${fieldErrors.title ? "border-red-300" : "border-gray-300"}`}
                 placeholder="e.g., Write a Marketing Email"
               />
+              {fieldErrors.title && <p className="text-xs text-red-500 mt-1">{fieldErrors.title}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -77,63 +171,120 @@ export default function CreateTestPage() {
                 placeholder="Brief description of what this test evaluates..."
               />
             </div>
-          </div>
-        )}
-
-        {/* Step 2: AI Model */}
-        {step === 1 && (
-          <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Choose AI Model</h2>
-            <p className="text-sm text-gray-600">Select which AI model candidates will interact with during the assessment.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { value: "gpt-4o", name: "GPT-4o", provider: "OpenAI", desc: "Best for general-purpose tasks" },
-                { value: "claude", name: "Claude", provider: "Anthropic", desc: "Strong at analysis and writing" },
-                { value: "gemini", name: "Gemini", provider: "Google", desc: "Great for multimodal tasks" },
-              ].map((model) => (
-                <button
-                  key={model.value}
-                  onClick={() => update("model", model.value)}
-                  className={`p-5 rounded-xl border-2 text-left transition-colors ${
-                    form.model === model.value
-                      ? "border-[#1B5B7D] bg-[#1B5B7D]/10"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <div className="font-semibold text-gray-900 mb-0.5">{model.name}</div>
-                  <div className="text-xs text-gray-500 mb-2">{model.provider}</div>
-                  <div className="text-sm text-gray-600">{model.desc}</div>
-                </button>
-              ))}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Test Type *</label>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {TEST_TYPES.map((t) => (
+                  <button
+                    key={t.value}
+                    type="button"
+                    onClick={() => update("testType", t.value)}
+                    className={`p-3 rounded-lg border-2 text-left transition-colors ${
+                      form.testType === t.value ? "border-[#1B5B7D] bg-[#1B5B7D]/10" : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="font-medium text-sm text-gray-900">{t.label}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">{t.desc}</div>
+                  </button>
+                ))}
+              </div>
+              {fieldErrors.testType && <p className="text-xs text-red-500 mt-1">{fieldErrors.testType}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty Level</label>
+              <div className="flex gap-2">
+                {DIFFICULTIES.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => update("difficulty", d)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                      form.difficulty === d ? "border-[#1B5B7D] bg-[#1B5B7D]/10 text-[#1B5B7D]" : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                  >
+                    {d.charAt(0).toUpperCase() + d.slice(1)}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
 
-        {/* Step 3: Task */}
-        {step === 2 && (
+        {/* Step 2: Task */}
+        {step === 1 && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-gray-900">Define the Task</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Task Description</label>
-              <p className="text-xs text-gray-500 mb-2">This is what candidates will see. Be specific about what they need to accomplish.</p>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Task Prompt (what candidates see) *</label>
+              <p className="text-xs text-gray-500 mb-2">Be specific about what candidates need to accomplish using AI.</p>
               <textarea
-                value={form.taskDescription}
-                onChange={(e) => update("taskDescription", e.target.value)}
+                value={form.taskPrompt}
+                onChange={(e) => update("taskPrompt", e.target.value)}
                 rows={6}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent resize-none"
-                placeholder="Describe the task in detail. What should the candidate achieve using AI?"
+                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent resize-none ${fieldErrors.taskPrompt ? "border-red-300" : "border-gray-300"}`}
+                placeholder="Describe the task in detail..."
               />
+              {fieldErrors.taskPrompt && <p className="text-xs text-red-500 mt-1">{fieldErrors.taskPrompt}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Expected Outcome</label>
-              <p className="text-xs text-gray-500 mb-2">Describe what a successful result looks like. Used for scoring accuracy.</p>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Expected Outcomes</label>
+              <p className="text-xs text-gray-500 mb-2">Describe what a successful result looks like. Used for scoring.</p>
               <textarea
-                value={form.expectedOutcome}
-                onChange={(e) => update("expectedOutcome", e.target.value)}
+                value={form.expectedOutcomes}
+                onChange={(e) => update("expectedOutcomes", e.target.value)}
                 rows={4}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent resize-none"
                 placeholder="What does a high-quality output look like?"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">AI Model</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  { value: "gpt-4o", name: "GPT-4o", provider: "OpenAI" },
+                  { value: "claude", name: "Claude", provider: "Anthropic" },
+                  { value: "gemini", name: "Gemini", provider: "Google" },
+                ].map((m) => (
+                  <button
+                    key={m.value}
+                    type="button"
+                    onClick={() => update("model", m.value)}
+                    className={`p-4 rounded-lg border-2 text-left transition-colors ${
+                      form.model === m.value ? "border-[#1B5B7D] bg-[#1B5B7D]/10" : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="font-semibold text-sm text-gray-900">{m.name}</div>
+                    <div className="text-xs text-gray-500">{m.provider}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Settings */}
+        {step === 2 && (
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold text-gray-900">Test Settings</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Max Attempts</label>
+                <input type="number" value={form.maxAttempts} onChange={(e) => update("maxAttempts", parseInt(e.target.value) || 1)} min={1} max={20}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent" />
+                <p className="text-xs text-gray-500 mt-1">Number of prompts allowed</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Time Limit (minutes)</label>
+                <input type="number" value={form.timeLimitMinutes} onChange={(e) => update("timeLimitMinutes", parseInt(e.target.value) || 5)} min={1} max={120}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent" />
+                <p className="text-xs text-gray-500 mt-1">Total time to complete</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Token Budget</label>
+                <input type="number" value={form.tokenBudget} onChange={(e) => update("tokenBudget", parseInt(e.target.value) || 500)} min={100} max={50000} step={500}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent" />
+                <p className="text-xs text-gray-500 mt-1">Max tokens across all prompts</p>
+              </div>
             </div>
           </div>
         )}
@@ -141,46 +292,25 @@ export default function CreateTestPage() {
         {/* Step 4: Scoring */}
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Scoring Criteria</h2>
-            <p className="text-sm text-gray-600">Set the constraints that determine how candidates are evaluated.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Max Attempts</label>
-                <input
-                  type="number"
-                  value={form.maxAttempts}
-                  onChange={(e) => update("maxAttempts", parseInt(e.target.value) || 1)}
-                  min={1}
-                  max={20}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500 mt-1">Number of prompts allowed</p>
+            <h2 className="text-lg font-semibold text-gray-900">Scoring Weights</h2>
+            <p className="text-sm text-gray-600">Customize how candidates are scored. Weights should sum to 100.</p>
+            {weightsTotal !== 100 && (
+              <div className="text-sm text-amber-600 bg-amber-50 border border-amber-100 rounded-md px-3 py-2">
+                Weights sum to {weightsTotal} — they should total 100.
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Time Limit (minutes)</label>
-                <input
-                  type="number"
-                  value={form.timeLimitMinutes}
-                  onChange={(e) => update("timeLimitMinutes", parseInt(e.target.value) || 5)}
-                  min={5}
-                  max={120}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500 mt-1">Total time to complete</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Token Budget</label>
-                <input
-                  type="number"
-                  value={form.tokenBudget}
-                  onChange={(e) => update("tokenBudget", parseInt(e.target.value) || 500)}
-                  min={500}
-                  max={10000}
-                  step={500}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500 mt-1">Max tokens across all prompts</p>
-              </div>
+            )}
+            <div className="space-y-4">
+              {(["accuracy", "efficiency", "speed"] as const).map((key) => (
+                <div key={key} className="flex items-center gap-4">
+                  <label className="text-sm font-medium text-gray-700 w-24 capitalize">{key}</label>
+                  <input
+                    type="range" min={0} max={100} value={form.scoringWeights[key]}
+                    onChange={(e) => updateWeight(key, parseInt(e.target.value))}
+                    className="flex-1"
+                  />
+                  <span className="text-sm font-mono text-gray-600 w-10 text-right">{form.scoringWeights[key]}%</span>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -189,55 +319,40 @@ export default function CreateTestPage() {
         {step === 4 && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-gray-900">Review &amp; Publish</h2>
-            <p className="text-sm text-gray-600">Review your assessment details before publishing.</p>
 
             <div className="bg-gray-50 rounded-lg p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-500">Test Name</span>
-                  <p className="font-medium text-gray-900 mt-0.5">{form.name || "Untitled Test"}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">AI Model</span>
-                  <p className="font-medium text-gray-900 mt-0.5">{form.model === "gpt-4o" ? "GPT-4o" : form.model === "claude" ? "Claude" : "Gemini"}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Max Attempts</span>
-                  <p className="font-medium text-gray-900 mt-0.5">{form.maxAttempts}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Time Limit</span>
-                  <p className="font-medium text-gray-900 mt-0.5">{form.timeLimitMinutes} minutes</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Token Budget</span>
-                  <p className="font-medium text-gray-900 mt-0.5">{form.tokenBudget.toLocaleString()} tokens</p>
-                </div>
+                <div><span className="text-gray-500">Title</span><p className="font-medium text-gray-900 mt-0.5">{form.title || "Untitled"}</p></div>
+                <div><span className="text-gray-500">Type</span><p className="font-medium text-gray-900 mt-0.5 capitalize">{form.testType}</p></div>
+                <div><span className="text-gray-500">Difficulty</span><p className="font-medium text-gray-900 mt-0.5 capitalize">{form.difficulty}</p></div>
+                <div><span className="text-gray-500">AI Model</span><p className="font-medium text-gray-900 mt-0.5">{modelLabel}</p></div>
+                <div><span className="text-gray-500">Time Limit</span><p className="font-medium text-gray-900 mt-0.5">{form.timeLimitMinutes}m</p></div>
+                <div><span className="text-gray-500">Max Attempts</span><p className="font-medium text-gray-900 mt-0.5">{form.maxAttempts}</p></div>
+                <div><span className="text-gray-500">Token Budget</span><p className="font-medium text-gray-900 mt-0.5">{form.tokenBudget.toLocaleString()}</p></div>
+                <div><span className="text-gray-500">Scoring</span><p className="font-medium text-gray-900 mt-0.5">A:{form.scoringWeights.accuracy} E:{form.scoringWeights.efficiency} S:{form.scoringWeights.speed}</p></div>
               </div>
-              {form.description && (
-                <div className="text-sm">
-                  <span className="text-gray-500">Description</span>
-                  <p className="text-gray-900 mt-0.5">{form.description}</p>
-                </div>
-              )}
-              {form.taskDescription && (
-                <div className="text-sm">
-                  <span className="text-gray-500">Task</span>
-                  <p className="text-gray-900 mt-0.5">{form.taskDescription}</p>
-                </div>
-              )}
+              {form.description && <div className="text-sm"><span className="text-gray-500">Description</span><p className="text-gray-900 mt-0.5">{form.description}</p></div>}
+              {form.taskPrompt && <div className="text-sm"><span className="text-gray-500">Task Prompt</span><p className="text-gray-900 mt-0.5 whitespace-pre-wrap">{form.taskPrompt}</p></div>}
+              {form.expectedOutcomes && <div className="text-sm"><span className="text-gray-500">Expected Outcomes</span><p className="text-gray-900 mt-0.5">{form.expectedOutcomes}</p></div>}
             </div>
 
-            {/* Preview */}
+            {/* Candidate Preview */}
             <div className="border border-dashed border-gray-300 rounded-lg p-6">
               <div className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">Candidate Preview</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">{form.name || "Untitled Test"}</h3>
-              <p className="text-sm text-gray-600 mb-4">{form.description || "No description provided."}</p>
-              <div className="flex gap-6 text-sm text-gray-500">
-                <span>Model: {form.model === "gpt-4o" ? "GPT-4o" : form.model === "claude" ? "Claude" : "Gemini"}</span>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">{form.title || "Untitled Test"}</h3>
+              <p className="text-sm text-gray-600 mb-3">{form.description || "No description."}</p>
+              <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
+                <span>Model: {modelLabel}</span>
                 <span>Time: {form.timeLimitMinutes}m</span>
                 <span>Attempts: {form.maxAttempts}</span>
+                <span className="capitalize">{form.difficulty}</span>
               </div>
+              {form.taskPrompt && (
+                <div className="bg-white border border-gray-200 rounded-md p-4">
+                  <div className="text-xs text-gray-400 mb-2 font-medium">YOUR TASK</div>
+                  <p className="text-sm text-gray-700 whitespace-pre-wrap">{form.taskPrompt}</p>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -252,18 +367,30 @@ export default function CreateTestPage() {
           >
             Back
           </button>
-          {step < steps.length - 1 ? (
-            <button
-              onClick={() => setStep(step + 1)}
-              className="px-6 py-2.5 bg-[#1B5B7D] hover:bg-[#14455E] text-white rounded-lg text-sm font-medium transition-colors"
-            >
-              Continue
-            </button>
-          ) : (
-            <button className="px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white rounded-lg text-sm font-medium transition-colors">
-              Publish Test
-            </button>
-          )}
+          <div className="flex gap-3">
+            {step < steps.length - 1 ? (
+              <button onClick={goNext} className="px-6 py-2.5 bg-[#1B5B7D] hover:bg-[#14455E] text-white rounded-lg text-sm font-medium transition-colors">
+                Continue
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleSubmit("draft")}
+                  disabled={loading}
+                  className="px-6 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-60 rounded-lg text-sm font-medium transition-colors"
+                >
+                  {loading ? "Saving..." : "Save as Draft"}
+                </button>
+                <button
+                  onClick={() => handleSubmit("active")}
+                  disabled={loading}
+                  className="px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] disabled:opacity-60 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  {loading ? "Publishing..." : "Publish Test"}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
