@@ -395,3 +395,62 @@ All references updated across the codebase:
 
 ### Verification
 - TypeScript compiles clean (npx tsc --noEmit — no errors)
+
+---
+
+# Nav, Footer Redesign + Homepage Product Mockups
+
+**Date:** 12 Feb 2026
+**Builder:** Banks (subagent: redesign-nav-footer)
+
+## What Changed
+
+### Nav Redesign (src/components/Nav.tsx)
+- **Monospace wordmark** with bracket motif: [InpromptiFy] — distinctive, not template-y
+- Removed logo image dependency, pure text brand
+- **Scroll effect**: transparent on top, becomes opaque with backdrop blur on scroll
+- Subtle separator line between login and CTA
+- CTA uses understated ghost-button style (white/8% bg), not screaming gradient
+- **Mobile**: animated 2-line toggle (not hamburger), smooth height transition dropdown
+- Reduced nav height from h-16 to h-14 for tighter feel
+- Inspired by Linear/Stripe nav patterns: confident, minimal
+
+### Footer Redesign (src/components/Footer.tsx)
+- Clean 4-column layout: Product, Company, Legal, Connect
+- Compact — reduced padding, smaller text (11px headers, 13px links)
+- Social icons: X/Twitter, LinkedIn, GitHub — icon only, subtle gray
+- "Built for teams that take AI seriously" tagline in Connect column
+- Monospace [InpromptiFy] mark in bottom bar
+- Darker bg (#080C18) to differentiate from page content
+
+### Homepage Product Mockups (4 new components in src/components/home/)
+
+1. **HeroMockup** — Realistic browser frame showing sandbox UI: prompt textarea, AI response bubble, timer bar, attempt/token counters. Pure CSS/JSX, no images.
+
+2. **ScorePreview** — Animated PromptScore card. Score counts up from 0?87 on scroll into view (IntersectionObserver). Four breakdown bars (Output Quality, Efficiency, Iteration Strategy, Token Economy) animate width. Shows "Top 15%" badge.
+
+3. **DashboardPreview** — Mock employer dashboard table with 5 candidates, scores, attempts, tokens, time. Top candidate highlighted. Responsive — hides detail columns on mobile.
+
+4. **BeforeAfter** — Side-by-side comparison: "Old way: 45-min interview" vs "InpromptiFy: 5-min test". Red ? vs green ? lists. Big time numbers at bottom (45 min vs 5 min).
+
+### Homepage Restructure (src/app/page.tsx)
+- Hero now includes HeroMockup below the CTA
+- Added // assess what matters mono comment as section label (replacing pill badges)
+- Hero subtitle uses gray-500 instead of gradient for "Not résumé claims" (less template-y)
+- New sections: Scoring Preview, Dashboard Preview, Before/After
+- All section headers use consistent ont-mono label + bold heading pattern
+- Feature grid and How It Works use gap-px + bg divider pattern instead of glass-card borders
+- Adjusted spacing: py-20/py-28 instead of py-24/py-32 for tighter rhythm
+
+### Design Philosophy
+- **No gradients on text** (removed the indigo?violet gradient from hero)
+- **No glass-card everywhere** — switched to solid bg with gap-px dividers
+- **Monospace accents** for labels, counters, scores — feels technical, not marketing
+- **Muted palette** — less indigo glow, more gray-500/600 with selective color pops
+- **Grid dividers** over card borders — Linear-inspired density
+
+## Verification
+- TypeScript compiles clean (
+px tsc --noEmit — no errors)
+- All components responsive (mobile-first grid patterns)
+- Animations: scroll-triggered score counter, CSS transition bars, no bounce/spin
