@@ -1,18 +1,64 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { mockTests } from "@/lib/mockData";
 
+interface TestData {
+  id: string;
+  name: string;
+  description: string;
+  model: string;
+  taskDescription: string;
+  maxAttempts: number;
+  timeLimitMinutes: number;
+  tokenBudget: number;
+}
+
 export default function TestLandingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const test = mockTests.find((t) => t.id === id) || mockTests[0];
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
+  // Try to load from mock data first, will attempt DB fetch
+  const mockTest = mockTests.find((t) => t.id === id) || mockTests[0];
+  const [test, setTest] = useState<TestData>({
+    id: mockTest.id,
+    name: mockTest.name,
+    description: mockTest.description,
+    model: mockTest.model,
+    taskDescription: mockTest.taskDescription,
+    maxAttempts: mockTest.maxAttempts,
+    timeLimitMinutes: mockTest.timeLimitMinutes,
+    tokenBudget: mockTest.tokenBudget,
+  });
+
+  useEffect(() => {
+    // Try fetching real test data from DB
+    fetch(`/api/tests/${id}`)
+      .then((r) => {
+        if (!r.ok) return null;
+        return r.json();
+      })
+      .then((d) => {
+        if (d && d.title) {
+          setTest({
+            id: d.id?.toString() || id,
+            name: d.title,
+            description: d.description || "",
+            model: d.model || "GPT-4o",
+            taskDescription: d.task_prompt || d.taskDescription || "",
+            maxAttempts: d.max_attempts || 5,
+            timeLimitMinutes: d.time_limit_minutes || 15,
+            tokenBudget: d.token_budget || 2000,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [id]);
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
           <Link href="/" className="font-bold text-base text-gray-900">Inpromptyou</Link>
@@ -27,7 +73,6 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
           <p className="text-sm text-gray-600 leading-relaxed">{test.description}</p>
         </div>
 
-        {/* Test Info */}
         <div className="grid grid-cols-4 gap-3 mb-8">
           {[
             { label: "Time", value: `${test.timeLimitMinutes}m` },
@@ -42,7 +87,6 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
           ))}
         </div>
 
-        {/* What's Measured */}
         <div className="bg-white rounded-md border border-gray-200 p-5 mb-6">
           <h2 className="text-sm font-semibold text-gray-900 mb-3">What we measure</h2>
           <div className="grid grid-cols-2 gap-3">
@@ -60,7 +104,6 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
-        {/* Start Form */}
         <div className="bg-white rounded-md border border-gray-200 p-5">
           <h2 className="text-sm font-semibold text-gray-900 mb-3">Enter your details to begin</h2>
           <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
@@ -71,7 +114,7 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
                 placeholder="Your full name"
               />
             </div>
@@ -82,13 +125,13 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
                 placeholder="you@example.com"
               />
             </div>
             <Link
               href={`/test/${test.id}/sandbox`}
-              className="block w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-center py-2.5 rounded-md text-sm font-medium transition-colors"
+              className="block w-full bg-[#1B5B7D] hover:bg-[#14455E] text-white text-center py-2.5 rounded-md text-sm font-medium transition-colors"
             >
               Start Test
             </Link>

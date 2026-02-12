@@ -31,7 +31,7 @@ export default function HomePage() {
               <Link href="/signup" className="inline-flex items-center justify-center bg-[#1B5B7D] hover:bg-[#14455E] text-white px-6 py-3 rounded-md font-medium text-sm transition-colors border border-white/20">
                 Start for free
               </Link>
-              <Link href="/test/test-001" className="inline-flex items-center justify-center bg-white/10 text-white border border-white/30 hover:bg-white/20 px-6 py-3 rounded-md font-medium text-sm transition-colors backdrop-blur-sm">
+              <Link href="/test/demo" className="inline-flex items-center justify-center bg-white/10 text-white border border-white/30 hover:bg-white/20 px-6 py-3 rounded-md font-medium text-sm transition-colors backdrop-blur-sm">
                 Try a sample test
               </Link>
             </div>

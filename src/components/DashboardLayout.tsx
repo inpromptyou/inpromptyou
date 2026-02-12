@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 
 const navItems = [
   {
@@ -54,53 +55,127 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
   };
 
-  return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-56 bg-[#0C2A3A] text-gray-400 flex flex-col shrink-0 hidden md:flex">
-        <div className="p-4 border-b border-[#14374A]">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-icon.jpg" alt="Inpromptyou" width={24} height={24} className="rounded" />
-            <span className="font-bold text-white text-sm">Inpromptyou</span>
+  // Close on navigation
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Close on outside tap
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [mobileOpen]);
+
+  // Prevent scroll when mobile nav is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
+  const sidebarContent = (
+    <>
+      <div className="p-4 border-b border-[#14374A]">
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logo-icon.jpg" alt="Inpromptyou" width={24} height={24} className="rounded" />
+          <span className="font-bold text-white text-sm">Inpromptyou</span>
+        </Link>
+      </div>
+
+      <nav className="flex-1 p-3 space-y-0.5">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex items-center gap-2.5 px-3 py-2.5 min-h-[44px] rounded-md text-sm transition-colors ${
+              isActive(item.href)
+                ? "bg-[#1B4D65] text-white"
+                : "text-gray-500 hover:bg-[#12384C] hover:text-gray-300"
+            }`}
+          >
+            {item.icon}
+            {item.label}
           </Link>
-        </div>
+        ))}
+      </nav>
 
-        <nav className="flex-1 p-3 space-y-0.5">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
-                isActive(item.href)
-                  ? "bg-[#1B4D65] text-white"
-                  : "text-gray-500 hover:bg-[#12384C] hover:text-gray-300"
-              }`}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="p-3 border-t border-[#14374A]">
-          <div className="flex items-center gap-2.5 px-3 py-2">
-            <div className="w-7 h-7 rounded-full bg-[#1B5B7D] flex items-center justify-center text-white text-xs font-medium">JD</div>
-            <div>
-              <p className="text-sm text-white leading-none">Jane Doe</p>
-              <p className="text-xs text-gray-600 mt-0.5">jane@company.com</p>
-            </div>
+      <div className="p-3 border-t border-[#14374A]">
+        <div className="flex items-center gap-2.5 px-3 py-2">
+          <div className="w-7 h-7 rounded-full bg-[#1B5B7D] flex items-center justify-center text-white text-xs font-medium">JD</div>
+          <div>
+            <p className="text-sm text-white leading-none">Jane Doe</p>
+            <p className="text-xs text-gray-600 mt-0.5">jane@company.com</p>
           </div>
         </div>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      {/* Desktop sidebar */}
+      <aside className="w-56 bg-[#0C2A3A] text-gray-400 flex-col shrink-0 hidden md:flex">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity" />
+      )}
+
+      {/* Mobile sidebar */}
+      <aside
+        ref={sidebarRef}
+        className={`fixed inset-y-0 left-0 w-64 bg-[#0C2A3A] text-gray-400 flex flex-col z-50 md:hidden transform transition-transform duration-300 ease-in-out ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Close button */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="absolute top-4 right-3 p-1 text-gray-500 hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Close menu"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        {sidebarContent}
       </aside>
 
       {/* Main content */}
       <main className="flex-1 overflow-auto">
+        {/* Mobile top bar */}
+        <div className="md:hidden sticky top-0 z-30 bg-white border-b border-gray-200 flex items-center gap-3 px-4 py-3">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center -ml-2 text-gray-700"
+            aria-label="Open menu"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo-icon.jpg" alt="Inpromptyou" width={24} height={24} className="rounded" />
+            <span className="font-bold text-gray-900 text-sm">Inpromptyou</span>
+          </Link>
+        </div>
         {children}
       </main>
     </div>

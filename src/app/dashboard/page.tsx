@@ -1,9 +1,34 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { mockCandidates, dashboardStats } from "@/lib/mockData";
 import PromptScoreBadge from "@/components/PromptScoreBadge";
+import { dashboardStats, mockCandidates, type Candidate } from "@/lib/mockData";
+
+interface Stats {
+  testsCreated: number;
+  candidatesTested: number;
+  avgPromptScore: number;
+  totalTokensUsed: number;
+}
 
 export default function DashboardHome() {
-  const recentResults = mockCandidates.slice(0, 6);
+  const [stats, setStats] = useState<Stats>({
+    testsCreated: dashboardStats.testsCreated,
+    candidatesTested: dashboardStats.candidatesTested,
+    avgPromptScore: dashboardStats.avgPromptScore,
+    totalTokensUsed: dashboardStats.totalTokensSaved,
+  });
+  const [recentResults, setRecentResults] = useState<Candidate[]>(mockCandidates.slice(0, 6));
+
+  useEffect(() => {
+    fetch("/api/dashboard/stats").then((r) => r.json()).then((d) => {
+      if (d.testsCreated !== undefined) setStats(d);
+    }).catch(() => {});
+    fetch("/api/dashboard/candidates").then((r) => r.json()).then((d) => {
+      if (Array.isArray(d) && d.length > 0) setRecentResults(d.slice(0, 6));
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="p-6 lg:p-8 max-w-6xl">
@@ -15,10 +40,10 @@ export default function DashboardHome() {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
         {[
-          { label: "Tests Created", value: dashboardStats.testsCreated.toString() },
-          { label: "Candidates Tested", value: dashboardStats.candidatesTested.toString() },
-          { label: "Avg Prompt Score", value: dashboardStats.avgPromptScore.toString() },
-          { label: "Tokens Used", value: `${(dashboardStats.totalTokensSaved / 1000).toFixed(1)}K` },
+          { label: "Tests Created", value: stats.testsCreated.toString() },
+          { label: "Candidates Tested", value: stats.candidatesTested.toString() },
+          { label: "Avg Prompt Score", value: stats.avgPromptScore.toString() },
+          { label: "Tokens Used", value: `${(stats.totalTokensUsed / 1000).toFixed(1)}K` },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-lg border border-gray-200 p-4">
             <span className="text-xs text-gray-500">{stat.label}</span>
@@ -64,7 +89,7 @@ export default function DashboardHome() {
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-500">
-                        {c.name.split(" ").map((n) => n[0]).join("")}
+                        {c.name.split(" ").map((n: string) => n[0]).join("")}
                       </div>
                       <div>
                         <div className="text-sm font-medium text-gray-900">{c.name}</div>

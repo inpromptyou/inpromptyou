@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { mockCandidates } from "@/lib/mockData";
+import { useState, useEffect } from "react";
+import { mockCandidates, type Candidate } from "@/lib/mockData";
 import PromptScoreBadge from "@/components/PromptScoreBadge";
 
 type SortKey = "promptScore" | "completedAt" | "testName" | "tokensUsed" | "timeSpentMinutes";
 
 export default function CandidatesPage() {
+  const [candidates, setCandidates] = useState<Candidate[]>(mockCandidates);
   const [sortKey, setSortKey] = useState<SortKey>("promptScore");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    fetch("/api/dashboard/candidates")
+      .then((r) => r.json())
+      .then((d) => { if (Array.isArray(d) && d.length > 0) setCandidates(d); })
+      .catch(() => {});
+  }, []);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -20,7 +28,7 @@ export default function CandidatesPage() {
     }
   };
 
-  const sorted = [...mockCandidates]
+  const sorted = [...candidates]
     .filter((c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -56,7 +64,6 @@ export default function CandidatesPage() {
         <p className="text-gray-500 text-sm mt-1">All candidates who have taken your assessments</p>
       </div>
 
-      {/* Search */}
       <div className="mb-5">
         <div className="relative max-w-xs">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -72,7 +79,6 @@ export default function CandidatesPage() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -94,7 +100,7 @@ export default function CandidatesPage() {
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-500">
-                        {c.name.split(" ").map((n) => n[0]).join("")}
+                        {c.name.split(" ").map((n: string) => n[0]).join("")}
                       </div>
                       <div>
                         <div className="text-sm font-medium text-gray-900">{c.name}</div>
