@@ -65,15 +65,17 @@ const plans = [
   },
   {
     name: "Enterprise",
-    monthlyPrice: 799,
+    monthlyPrice: -1,
     description: "For organizations with specific needs",
     features: [
-      "2,000 tests per month",
+      "Custom test volume",
       "Unlimited seats",
       "SSO / SAML",
       "White-label option",
       "Unlimited API access",
       "Dedicated account manager",
+      "Custom model endpoints",
+      "SLA guarantee",
     ],
     cta: "Contact Sales",
     highlight: false,
@@ -84,6 +86,7 @@ export default function PricingPage() {
   const [annual, setAnnual] = useState(false);
 
   const getPrice = (monthlyPrice: number) => {
+    if (monthlyPrice === -1) return "Custom";
     if (monthlyPrice === 0) return "$0";
     if (annual) return `$${(Math.round(monthlyPrice * 0.8 * 100) / 100).toFixed(monthlyPrice % 1 ? 2 : 0)}`;
     return `$${monthlyPrice % 1 ? monthlyPrice.toFixed(2) : monthlyPrice}`;
@@ -132,6 +135,7 @@ export default function PricingPage() {
                 <div className="flex items-baseline gap-1 mb-1">
                   <span className={`text-3xl font-bold ${plan.highlight ? "text-white" : "text-gray-900"}`}>{getPrice(plan.monthlyPrice)}</span>
                   {plan.monthlyPrice > 0 && <span className={`text-sm ${plan.highlight ? "text-gray-500" : "text-gray-400"}`}>/mo</span>}
+                  {plan.monthlyPrice === -1 && <span className={`text-sm ${plan.highlight ? "text-gray-500" : "text-gray-400"}`}> pricing</span>}
                 </div>
                 <p className={`text-sm mb-5 ${plan.highlight ? "text-gray-400" : "text-gray-500"}`}>{plan.description}</p>
 
@@ -145,7 +149,7 @@ export default function PricingPage() {
                 </ul>
 
                 <Link
-                  href={plan.name === "Enterprise" ? "#" : "/signup"}
+                  href={plan.name === "Enterprise" ? "/contact" : "/signup"}
                   className={`block text-center py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                     plan.highlight
                       ? "bg-[#6366F1] text-white hover:bg-[#4F46E5]"
