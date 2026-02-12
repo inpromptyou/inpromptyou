@@ -1,7 +1,5 @@
 import { getSql } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-
 // Lock: track if init has already been run this deployment
 let hasInitialized = false;
 
@@ -13,17 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Gate 2: Check authenticated session — must be admin role
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-    }
-    const role = (session.user as Record<string, unknown>).role;
-    if (role !== "admin") {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
-    }
-
-    // Gate 3: One-time-use per deployment
+    // Gate 2: One-time-use per deployment
     if (hasInitialized) {
       return NextResponse.json({ error: "Database already initialized this deployment. Restart the server to re-enable." }, { status: 429 });
     }
