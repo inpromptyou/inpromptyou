@@ -20,6 +20,13 @@ interface TestData {
   max_attempts: number;
   time_limit_minutes: number;
   token_budget: number;
+  custom_criteria?: Array<{
+    name: string;
+    description: string;
+    type: string;
+    weight: number;
+    config: Record<string, unknown>;
+  }>;
 }
 
 type SandboxState = "loading" | "ready" | "active" | "submitting" | "submitted" | "timeup";
@@ -65,6 +72,7 @@ export default function TestSandboxPage({
             max_attempts: d.max_attempts || 5,
             time_limit_minutes: d.time_limit_minutes || 15,
             token_budget: d.token_budget || 2000,
+            custom_criteria: d.custom_criteria || undefined,
           };
           setTest(t);
           setTimeLeft(t.time_limit_minutes * 60);
@@ -175,6 +183,7 @@ export default function TestSandboxPage({
           timeLimitMinutes: test.time_limit_minutes,
           taskDescription: test.task_prompt,
           expectedOutcome: test.expected_outcomes,
+          customCriteria: test.custom_criteria,
         }),
       });
 

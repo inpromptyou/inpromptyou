@@ -22,12 +22,12 @@ export default function HomePage() {
                 // assess what matters
               </p>
               <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-bold text-white tracking-tight leading-[1.08] mb-5 animate-fade-in-up-delay-1">
-                Measure AI prompting skills.{" "}
-                <span className="text-gray-500">Not résumé claims.</span>
+                Test any AI skill.{" "}
+                <span className="text-gray-500">Not just presets.</span>
               </h1>
               <p className="text-base text-gray-500 leading-relaxed mb-8 max-w-lg animate-fade-in-up-delay-2">
-                Put candidates in a real AI sandbox. Create a test in minutes,
-                get an objective PromptScore from 0–100.
+                From legal drafting to code debugging — create a test for any role in 30 seconds.
+                Describe what you need, AI builds the assessment.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up-delay-3">
                 <Link href="/signup" className="inline-flex items-center justify-center text-white bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
@@ -105,12 +105,12 @@ export default function HomePage() {
             <div className="text-center mb-14">
               <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">Process</p>
               <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-                Three steps. Five minutes.
+                Three steps. Thirty seconds.
               </h2>
             </div>
             <div className="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden">
               {[
-                { step: "01", title: "Create", desc: "Define a task, pick an AI model, set token and time limits." },
+                { step: "01", title: "Create", desc: "Describe what you want to test. AI generates the task, scoring criteria, and settings in seconds." },
                 { step: "02", title: "Assess", desc: "Candidates enter a sandboxed environment and solve the task with a real LLM." },
                 { step: "03", title: "Hire", desc: "Get a PromptScore 0–100 with detailed analytics. Compare and decide." },
               ].map((item) => (
@@ -150,7 +150,7 @@ export default function HomePage() {
               {[
                 { title: "Real LLM Sandbox", desc: "Candidates use actual AI models in a controlled, monitored environment." },
                 { title: "Prompt Scoring", desc: "Automated 0–100 scoring based on efficiency, quality, and iteration count." },
-                { title: "Custom Tasks", desc: "Create assessments tailored to your role — marketing, engineering, data." },
+                { title: "Any Skill, Any Role", desc: "Legal drafting, code debugging, medical reports, ad copy — test anything with custom criteria." },
                 { title: "Token Budgets", desc: "Set token limits to measure how efficiently candidates work with AI." },
                 { title: "Time Controls", desc: "Configurable time limits keep assessments standardized and fair." },
                 { title: "Analytics Dashboard", desc: "Compare candidates side-by-side with detailed performance breakdowns." },
@@ -238,7 +238,7 @@ export default function HomePage() {
               Stop guessing. Start measuring.
             </h2>
             <p className="text-sm text-gray-500 mb-8 max-w-md mx-auto">
-              Set up your first assessment in under five minutes.
+              Describe what you need, get a complete assessment in 30 seconds.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/signup" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors">

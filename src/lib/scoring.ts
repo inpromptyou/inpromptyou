@@ -25,6 +25,24 @@ export interface Message {
   content: string;
 }
 
+export interface CustomCriterionDef {
+  id?: string;
+  name: string;
+  description: string;
+  type: "rubric" | "keyword" | "tone" | "length";
+  weight: number;
+  config: Record<string, unknown>;
+}
+
+export interface CustomCriterionResult {
+  name: string;
+  type: string;
+  weight: number;
+  score: number;
+  maxScore: number;
+  details: string;
+}
+
 export interface ScoringInput {
   testId: string;
   messages: Message[];
@@ -37,6 +55,7 @@ export interface ScoringInput {
   taskDescription?: string;
   expectedOutcome?: string;
   testType?: string;
+  customCriteria?: CustomCriterionDef[];
 }
 
 export interface DimensionScore {
@@ -90,6 +109,8 @@ export interface ScoringResult {
     avgPromptLength: number;
     totalResponseLength: number;
   };
+  /** Custom criteria results (if custom criteria were used) */
+  customCriteriaResults?: CustomCriterionResult[];
   /** Criteria used */
   criteriaUsed: string;
   /** Timestamp */
@@ -694,6 +715,152 @@ function scoreIterationIQ(
   };
 }
 
+// ─── Custom Criteria Scoring ─────────────────────────────────────────────────
+
+/**
+ * Score a response against custom criteria defined by the employer.
+ * Returns individual criterion results and a composite score.
+ */
+function scoreCustomCriteria(
+  assistantMessages: string[],
+  customCriteria: CustomCriterionDef[]
+): { results: CustomCriterionResult[]; compositeScore: number } {
+  if (!customCriteria || customCriteria.length === 0) {
+    return { results: [], compositeScore: -1 };
+  }
+
+  const bestResponse = assistantMessages.length > 0
+    ? assistantMessages[assistantMessages.length - 1]
+    : "";
+
+  const results: CustomCriterionResult[] = [];
+  let totalWeightedScore = 0;
+  let totalWeight = 0;
+
+  for (const criterion of customCriteria) {
+    let score = 0;
+    const maxScore = 100;
+    let details = "";
+
+    switch (criterion.type) {
+      case "keyword": {
+        const mustInclude = (criterion.config.mustInclude as string[]) || [];
+        const mustNotInclude = (criterion.config.mustNotInclude as string[]) || [];
+        const responseLower = bestResponse.toLowerCase();
+
+        let found = 0;
+        let total = mustInclude.length + mustNotInclude.length;
+        if (total === 0) { score = 50; details = "No keywords configured"; break; }
+
+        const foundKeywords: string[] = [];
+        const missingKeywords: string[] = [];
+        for (const kw of mustInclude) {
+          if (responseLower.includes(kw.toLowerCase())) {
+            found++;
+            foundKeywords.push(kw);
+          } else {
+            missingKeywords.push(kw);
+          }
+        }
+
+        const badKeywords: string[] = [];
+        for (const kw of mustNotInclude) {
+          if (!responseLower.includes(kw.toLowerCase())) {
+            found++;
+          } else {
+            badKeywords.push(kw);
+          }
+        }
+
+        score = Math.round((found / total) * 100);
+        const parts: string[] = [];
+        if (foundKeywords.length > 0) parts.push(`Found: ${foundKeywords.join(", ")}`);
+        if (missingKeywords.length > 0) parts.push(`Missing: ${missingKeywords.join(", ")}`);
+        if (badKeywords.length > 0) parts.push(`Should not include: ${badKeywords.join(", ")}`);
+        details = parts.join(". ") || "Checked";
+        break;
+      }
+
+      case "tone": {
+        const expectedTone = (criterion.config.tone as string) || "professional";
+        const responseLower = bestResponse.toLowerCase();
+
+        const toneIndicators: Record<string, string[]> = {
+          professional: ["dear", "regards", "sincerely", "please", "thank you", "appreciate", "would", "kindly"],
+          casual: ["hey", "cool", "awesome", "gonna", "wanna", "btw", "!", "lol"],
+          technical: ["function", "implementation", "algorithm", "parameter", "interface", "module", "architecture"],
+          creative: ["imagine", "picture", "journey", "vibrant", "spark", "transform", "discover", "breathe"],
+        };
+
+        const indicators = toneIndicators[expectedTone] || toneIndicators.professional;
+        const matches = indicators.filter((w) => responseLower.includes(w)).length;
+        score = clamp(Math.round((matches / Math.max(3, indicators.length * 0.4)) * 100), 10, 100);
+        details = `Tone: ${expectedTone} (${matches}/${indicators.length} indicators found)`;
+        break;
+      }
+
+      case "length": {
+        const minWords = (criterion.config.minWords as number) || 0;
+        const maxWords = (criterion.config.maxWords as number) || Infinity;
+        const wordCount = bestResponse.split(/\s+/).filter(Boolean).length;
+
+        if (wordCount >= minWords && wordCount <= maxWords) {
+          score = 100;
+          details = `${wordCount} words (within ${minWords}-${maxWords} range)`;
+        } else if (wordCount < minWords) {
+          score = clamp(Math.round((wordCount / minWords) * 100), 10, 80);
+          details = `${wordCount} words (below minimum of ${minWords})`;
+        } else {
+          const overBy = wordCount - maxWords;
+          score = clamp(100 - Math.round((overBy / maxWords) * 50), 20, 80);
+          details = `${wordCount} words (exceeds maximum of ${maxWords})`;
+        }
+        break;
+      }
+
+      case "rubric":
+      default: {
+        // For rubric items, do keyword-matching on the description
+        // to see if the response addresses what the rubric is looking for
+        const rubricKeywords = criterion.description
+          .toLowerCase()
+          .split(/\s+/)
+          .filter((w) => w.length > 4);
+        const responseLower = bestResponse.toLowerCase();
+
+        if (rubricKeywords.length === 0) {
+          score = 50;
+          details = "Generic rubric — no specific keywords to match";
+        } else {
+          const matched = rubricKeywords.filter((w) => responseLower.includes(w)).length;
+          const matchRatio = matched / rubricKeywords.length;
+          score = clamp(Math.round(matchRatio * 100 + 20), 15, 95);
+          details = `${matched}/${rubricKeywords.length} rubric keywords found in response`;
+        }
+        break;
+      }
+    }
+
+    results.push({
+      name: criterion.name,
+      type: criterion.type,
+      weight: criterion.weight,
+      score: clamp(score, 0, maxScore),
+      maxScore,
+      details,
+    });
+
+    totalWeightedScore += score * criterion.weight;
+    totalWeight += criterion.weight;
+  }
+
+  const compositeScore = totalWeight > 0
+    ? clamp(Math.round(totalWeightedScore / totalWeight), 0, 100)
+    : -1;
+
+  return { results, compositeScore };
+}
+
 // ─── Feedback Generation ─────────────────────────────────────────────────────
 
 function generateFeedback(
@@ -767,18 +934,27 @@ export function scoreSubmission(input: ScoringInput): ScoringResult {
 
   const dimensions = { promptQuality, efficiency, speed, responseQuality, iterationIQ };
 
+  // Score custom criteria if provided
+  const customCriteriaResult = input.customCriteria && input.customCriteria.length > 0
+    ? scoreCustomCriteria(assistantMessages, input.customCriteria)
+    : { results: [], compositeScore: -1 };
+
   // Calculate composite PromptScore™
-  const promptScore = clamp(
-    Math.round(
-      promptQuality.weightedScore +
-      efficiency.weightedScore +
-      speed.weightedScore +
-      responseQuality.weightedScore +
-      iterationIQ.weightedScore
-    ),
-    0,
-    100
+  // If custom criteria exist, blend them into the score (50% standard dimensions, 50% custom)
+  let baseScore = Math.round(
+    promptQuality.weightedScore +
+    efficiency.weightedScore +
+    speed.weightedScore +
+    responseQuality.weightedScore +
+    iterationIQ.weightedScore
   );
+
+  let promptScore: number;
+  if (customCriteriaResult.compositeScore >= 0) {
+    promptScore = clamp(Math.round(baseScore * 0.5 + customCriteriaResult.compositeScore * 0.5), 0, 100);
+  } else {
+    promptScore = clamp(baseScore, 0, 100);
+  }
 
   const letterGrade = getLetterGrade(promptScore);
   const percentile = calculatePercentile(promptScore);
@@ -808,7 +984,8 @@ export function scoreSubmission(input: ScoringInput): ScoringResult {
       avgPromptLength,
       totalResponseLength,
     },
-    criteriaUsed: criteria.name,
+    customCriteriaResults: customCriteriaResult.results.length > 0 ? customCriteriaResult.results : undefined,
+    criteriaUsed: input.customCriteria && input.customCriteria.length > 0 ? "Custom Criteria" : criteria.name,
     evaluatedAt: new Date().toISOString(),
   };
 }

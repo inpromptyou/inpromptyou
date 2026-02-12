@@ -3,7 +3,7 @@ import { getSql } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 const ALL_COLUMNS = `id, user_id, title, description, task_prompt, expected_outcomes, test_type, difficulty,
-             time_limit_minutes, max_attempts, token_budget, model, scoring_weights, status,
+             time_limit_minutes, max_attempts, token_budget, model, scoring_weights, custom_criteria, status,
              cover_image, visibility, listing_type, company_name, location, salary_range,
              candidates_count, avg_score, completion_rate, created_at, updated_at`;
 

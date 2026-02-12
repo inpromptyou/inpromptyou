@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
       taskDescription: body.taskDescription,
       expectedOutcome: body.expectedOutcome,
       testType: body.testType,
+      customCriteria: body.customCriteria,
     };
 
     const result = scoreSubmission(input);

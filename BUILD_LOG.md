@@ -1,3 +1,85 @@
+# Build Log — Custom-First Test Creation & AI-Assisted Setup
+
+**Date:** 13 Feb 2026
+**Builder:** Banks (subagent: custom-prompts)
+
+## What Was Built
+
+### 1. Redesigned Create Test Form — Custom-First
+- **Step 0 "Describe"**: Big open textarea — "Describe what you want to test"
+- AI-assisted: "Generate Test with AI" button calls `/api/tests/ai-suggest`
+- AI returns: title, task prompt, expected outcomes, time/attempts, difficulty, model, custom scoring criteria
+- Preview panel shows AI suggestion with "Use This & Continue" or "Start Over"
+- "Or start from a template →" secondary option with gallery of 10 templates
+- Templates: Email Writing, Code Generation, Data Analysis, Creative Writing, Legal Drafting, Customer Support, Research Summary, Translation, Technical Writing, Custom (blank)
+- **Step 1 "Configure"**: Title, description, task prompt (with smart tips), expected outcomes, difficulty, model, time/attempts/tokens, cover image — all on one page
+- **Step 2 "Scoring"**: Base weights (accuracy/efficiency/speed) + full custom criteria builder
+- **Step 3 "Visibility"**: Public/private, listing type, job details
+- **Step 4 "Review"**: Full summary with candidate preview
+- Reduced from 6 steps to 5, much faster flow
+
+### 2. API Route: POST /api/tests/ai-suggest
+- Takes: `{ description }` — plain English description of what to test
+- Uses Claude 3.5 Haiku when ANTHROPIC_API_KEY is set
+- Falls back to comprehensive heuristic templates (11 categories: email, code, data, creative, legal, support, research, translation, medical, technical, general)
+- Returns: title, taskPrompt, expectedOutcomes, timeLimitMinutes, maxAttempts, difficulty, scoringWeights, customCriteria, suggestedModel
+- Makes test creation take 30 seconds instead of 5 minutes
+
+### 3. Custom Scoring Criteria System
+- Dynamic form: "Add Criterion" button
+- Each criterion has: name, description, type (rubric/keyword/tone/length), weight (0-100%)
+- **Keyword type**: must include / must NOT include lists
+- **Tone type**: professional / casual / technical / creative selection
+- **Length type**: min/max word count
+- **Rubric type**: freeform description for semantic matching
+- Weight total validation (should sum to 100)
+- Stored as JSONB `custom_criteria` column in tests table
+
+### 4. Updated Scoring Engine
+- `scoreCustomCriteria()` function in scoring.ts evaluates responses against custom criteria
+- Keyword scoring: checks mustInclude/mustNotInclude presence
+- Tone scoring: indicator word matching for each tone category
+- Length scoring: word count range checking with graceful degradation
+- Rubric scoring: keyword extraction from description for semantic matching
+- When custom criteria exist: final score = 50% standard dimensions + 50% custom criteria
+- When no custom criteria: falls back to default scoring algorithm
+- Results include `customCriteriaResults` array with per-criterion scores and details
+
+### 5. Smart Prompt Tips
+- Contextual tips appear below task prompt textarea as you type
+- Pattern-matched tips for: format, tone, audience, constraints, examples
+- Generic rotating tips when no specific pattern matches
+- Non-intrusive indigo callout style
+
+### 6. Updated Homepage Marketing Copy
+- Hero: "Test any AI skill. Not just presets."
+- Subtitle: "From legal drafting to code debugging — create a test for any role in 30 seconds"
+- How It Works step 1: "Describe what you want to test. AI generates the task, scoring criteria, and settings in seconds."
+- Features: "Any Skill, Any Role" replaces "Custom Tasks"
+- "Three steps. Thirty seconds." replaces "Three steps. Five minutes."
+- CTA: "Describe what you need, get a complete assessment in 30 seconds."
+
+## Files Created
+- `src/app/api/tests/ai-suggest/route.ts` — AI suggestion endpoint
+
+## Files Modified
+- `src/app/dashboard/create/page.tsx` — Complete rewrite (custom-first flow)
+- `src/lib/schema.ts` — Added custom_criteria JSONB column
+- `src/lib/scoring.ts` — Added CustomCriterionDef, scoreCustomCriteria(), blended scoring
+- `src/app/api/tests/create/route.ts` — Accepts and stores custom_criteria
+- `src/app/api/tests/[id]/route.ts` — Returns custom_criteria in ALL_COLUMNS
+- `src/app/api/test/evaluate/route.ts` — Passes customCriteria to scoring engine
+- `src/app/test/[id]/sandbox/page.tsx` — Loads and passes custom_criteria to evaluate
+- `src/app/page.tsx` — Updated marketing copy
+
+## Verification
+- TypeScript compilation: ✅ zero errors (`npx tsc --noEmit` passed clean)
+- Dark indigo design maintained
+- Responsive throughout
+- Backward compatible: tests without custom criteria use default scoring
+
+---
+
 # Build Log — Auto-Generated Thumbnails
 
 **Date:** 12 Feb 2026
