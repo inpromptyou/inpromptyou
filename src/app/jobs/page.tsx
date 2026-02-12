@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import TestThumbnail from "@/components/TestThumbnail";
 import { PublicTest } from "@/components/PublicTestCard";
 
 interface Job {
@@ -61,10 +62,21 @@ export default function JobsPage() {
                 <div key={`test-${test.id}`} className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-all">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4 flex-1 min-w-0">
-                      {test.cover_image && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={test.cover_image} alt="" className="w-14 h-14 rounded-lg object-cover shrink-0 hidden sm:block" />
-                      )}
+                      <div className="w-14 h-14 shrink-0 hidden sm:block">
+                        {test.cover_image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={test.cover_image} alt="" className="w-14 h-14 rounded-lg object-cover" />
+                        ) : (
+                          <TestThumbnail
+                            title={test.title}
+                            listingType="job"
+                            difficulty={test.difficulty}
+                            model={test.model}
+                            variant="thumb"
+                            className="w-14 h-14 !rounded-lg"
+                          />
+                        )}
+                      </div>
                       <div className="min-w-0">
                         <h2 className="text-lg font-semibold text-gray-900">{test.title}</h2>
                         {test.company_name && <p className="text-sm text-[#6366F1] font-medium mt-0.5">{test.company_name}</p>}

@@ -1,3 +1,38 @@
+# Build Log â€” Auto-Generated Thumbnails
+
+**Date:** 12 Feb 2026
+**Builder:** Banks (subagent)
+
+## What was built
+
+Created `src/components/TestThumbnail.tsx` â€” a pure CSS/SVG auto-generated thumbnail component for tests and job listings that don't have a cover image.
+
+### Design
+- **Gradient backgrounds** by listing type: indigo/violet for tests, emerald/teal for jobs, amber/orange for casual
+- **Geometric pattern overlay** (dots, diagonal lines, or grid) â€” varied per title via string hash
+- **Decorative circles** with position/size varied by title hash for uniqueness
+- **Noise/grain texture** via SVG filter for premium feel
+- **Emoji icon** per type (ðŸ’¼ job, ðŸ§ª test, ðŸŽ® casual)
+- **Title text** in white, truncated to 2 lines
+- **Difficulty badge** (Beginner/Intermediate/Advanced/Expert) with translucent colored background
+- **Model badge** (GPT-4o, Claude, Gemini, etc.)
+- **3 variants**: `card` (16:9), `banner` (3:1), `thumb` (1:1 square)
+
+### Files updated
+| File | Change |
+|------|--------|
+| `src/components/TestThumbnail.tsx` | **NEW** â€” the thumbnail component |
+| `src/components/PublicTestCard.tsx` | Uses `TestThumbnail variant="card"` when no cover_image |
+| `src/app/dashboard/tests/page.tsx` | Uses `TestThumbnail variant="thumb"` for table thumbnails |
+| `src/app/test/[id]/page.tsx` | Always shows banner â€” `TestThumbnail variant="banner"` as fallback |
+| `src/app/dashboard/tests/[id]/page.tsx` | Always shows banner â€” `TestThumbnail variant="banner"` as fallback |
+| `src/app/jobs/page.tsx` | Uses `TestThumbnail variant="thumb"` for job card icons |
+
+### TypeScript
+âœ… Clean compile (`tsc --noEmit` passes with no errors)
+
+---
+
 # Build Log â€” Critical Fixes #4 & #5: Create Test Wiring + Auth Fix
 
 **Date:** 12 Feb 2026  
@@ -360,28 +395,28 @@ Complete rewrite of the sandbox page with:
 - Persist results to Neon DB instead of sessionStorage
 - Add auth check to API routes (candidate session tracking)
 
-## 2026-02-12 — Rebrand InpromptYou ? InpromptiFy
+## 2026-02-12 ï¿½ Rebrand InpromptYou ? InpromptiFy
 
 All references updated across the codebase:
 - Brand: InpromptYou/Inpromptyou/inpromptyou/INPROMPTYOU ? InpromptiFy/Inpromptify/inpromptify/INPROMPTIFY
 - Domains: inpromptyou.ai, inpromptyou.com ? inpromptify.com
 - Files updated: layout.tsx, page.tsx (homepage, login, signup, privacy, terms, security, how-it-works, test/demo, test/[id], test/[id]/sandbox, test/[id]/results), Nav.tsx, Footer.tsx, DashboardLayout.tsx, ScoreCard.tsx, scoring.ts, scoring-criteria.ts, package.json, package-lock.json
-- TypeScript compiles clean (npx tsc --noEmit — no errors)
+- TypeScript compiles clean (npx tsc --noEmit ï¿½ no errors)
 
 
 ---
 
-## 2026-02-12 — Homepage Redesign & Dark Theme Overhaul
+## 2026-02-12 ï¿½ Homepage Redesign & Dark Theme Overhaul
 
 ### What changed
-- **Complete homepage redesign** — Removed ocean background/GIF, replaced with professional dark SaaS design
-- **New design system** — Deep navy (#0A0F1C) base, indigo (#6366F1) accent, violet secondary, glass-morphism cards
+- **Complete homepage redesign** ï¿½ Removed ocean background/GIF, replaced with professional dark SaaS design
+- **New design system** ï¿½ Deep navy (#0A0F1C) base, indigo (#6366F1) accent, violet secondary, glass-morphism cards
 - **Homepage sections**: Hero with gradient text + pill badge, Social proof bar, How it works (3-step cards), Product mockup, Features grid (6 cards), Problem/Solution comparison, Pricing teaser (3 tiers), Final CTA
 - **Subtle animations**: fade-in-up with staggered delays, pulse glow on badge, dot-grid background pattern
-- **Nav.tsx** — Updated to dark theme with indigo accent, backdrop blur
-- **Footer.tsx** — Dark theme, copyright "© 2026 InpromptiFy. All rights reserved."
-- **globals.css** — Removed all ocean CSS (waves, particles, caustics, keyframes). Added dot-grid, glass-card, gradient-border, fade-in-up animations
-- **OceanBackground.tsx** — No longer used by any page (was already unused, component file left in place)
+- **Nav.tsx** ï¿½ Updated to dark theme with indigo accent, backdrop blur
+- **Footer.tsx** ï¿½ Dark theme, copyright "ï¿½ 2026 InpromptiFy. All rights reserved."
+- **globals.css** ï¿½ Removed all ocean CSS (waves, particles, caustics, keyframes). Added dot-grid, glass-card, gradient-border, fade-in-up animations
+- **OceanBackground.tsx** ï¿½ No longer used by any page (was already unused, component file left in place)
 - **Color migration across ALL pages**: Replaced #1B5B7D ? #6366F1, #14455E ? #4F46E5, #0C2A3A ? #0A0F1C across all page files, DashboardLayout.tsx, ScoreCard.tsx
 
 ### Files updated
@@ -394,7 +429,7 @@ All references updated across the codebase:
 - All page.tsx files across app/ (color migration)
 
 ### Verification
-- TypeScript compiles clean (npx tsc --noEmit — no errors)
+- TypeScript compiles clean (npx tsc --noEmit ï¿½ no errors)
 
 ---
 
@@ -406,7 +441,7 @@ All references updated across the codebase:
 ## What Changed
 
 ### Nav Redesign (src/components/Nav.tsx)
-- **Monospace wordmark** with bracket motif: [InpromptiFy] — distinctive, not template-y
+- **Monospace wordmark** with bracket motif: [InpromptiFy] ï¿½ distinctive, not template-y
 - Removed logo image dependency, pure text brand
 - **Scroll effect**: transparent on top, becomes opaque with backdrop blur on scroll
 - Subtle separator line between login and CTA
@@ -417,26 +452,26 @@ All references updated across the codebase:
 
 ### Footer Redesign (src/components/Footer.tsx)
 - Clean 4-column layout: Product, Company, Legal, Connect
-- Compact — reduced padding, smaller text (11px headers, 13px links)
-- Social icons: X/Twitter, LinkedIn, GitHub — icon only, subtle gray
+- Compact ï¿½ reduced padding, smaller text (11px headers, 13px links)
+- Social icons: X/Twitter, LinkedIn, GitHub ï¿½ icon only, subtle gray
 - "Built for teams that take AI seriously" tagline in Connect column
 - Monospace [InpromptiFy] mark in bottom bar
 - Darker bg (#080C18) to differentiate from page content
 
 ### Homepage Product Mockups (4 new components in src/components/home/)
 
-1. **HeroMockup** — Realistic browser frame showing sandbox UI: prompt textarea, AI response bubble, timer bar, attempt/token counters. Pure CSS/JSX, no images.
+1. **HeroMockup** ï¿½ Realistic browser frame showing sandbox UI: prompt textarea, AI response bubble, timer bar, attempt/token counters. Pure CSS/JSX, no images.
 
-2. **ScorePreview** — Animated PromptScore card. Score counts up from 0?87 on scroll into view (IntersectionObserver). Four breakdown bars (Output Quality, Efficiency, Iteration Strategy, Token Economy) animate width. Shows "Top 15%" badge.
+2. **ScorePreview** ï¿½ Animated PromptScore card. Score counts up from 0?87 on scroll into view (IntersectionObserver). Four breakdown bars (Output Quality, Efficiency, Iteration Strategy, Token Economy) animate width. Shows "Top 15%" badge.
 
-3. **DashboardPreview** — Mock employer dashboard table with 5 candidates, scores, attempts, tokens, time. Top candidate highlighted. Responsive — hides detail columns on mobile.
+3. **DashboardPreview** ï¿½ Mock employer dashboard table with 5 candidates, scores, attempts, tokens, time. Top candidate highlighted. Responsive ï¿½ hides detail columns on mobile.
 
-4. **BeforeAfter** — Side-by-side comparison: "Old way: 45-min interview" vs "InpromptiFy: 5-min test". Red ? vs green ? lists. Big time numbers at bottom (45 min vs 5 min).
+4. **BeforeAfter** ï¿½ Side-by-side comparison: "Old way: 45-min interview" vs "InpromptiFy: 5-min test". Red ? vs green ? lists. Big time numbers at bottom (45 min vs 5 min).
 
 ### Homepage Restructure (src/app/page.tsx)
 - Hero now includes HeroMockup below the CTA
 - Added // assess what matters mono comment as section label (replacing pill badges)
-- Hero subtitle uses gray-500 instead of gradient for "Not résumé claims" (less template-y)
+- Hero subtitle uses gray-500 instead of gradient for "Not rï¿½sumï¿½ claims" (less template-y)
 - New sections: Scoring Preview, Dashboard Preview, Before/After
 - All section headers use consistent ont-mono label + bold heading pattern
 - Feature grid and How It Works use gap-px + bg divider pattern instead of glass-card borders
@@ -444,20 +479,20 @@ All references updated across the codebase:
 
 ### Design Philosophy
 - **No gradients on text** (removed the indigo?violet gradient from hero)
-- **No glass-card everywhere** — switched to solid bg with gap-px dividers
-- **Monospace accents** for labels, counters, scores — feels technical, not marketing
-- **Muted palette** — less indigo glow, more gray-500/600 with selective color pops
-- **Grid dividers** over card borders — Linear-inspired density
+- **No glass-card everywhere** ï¿½ switched to solid bg with gap-px dividers
+- **Monospace accents** for labels, counters, scores ï¿½ feels technical, not marketing
+- **Muted palette** ï¿½ less indigo glow, more gray-500/600 with selective color pops
+- **Grid dividers** over card borders ï¿½ Linear-inspired density
 
 ## Verification
 - TypeScript compiles clean (
-px tsc --noEmit — no errors)
+px tsc --noEmit ï¿½ no errors)
 - All components responsive (mobile-first grid patterns)
 - Animations: scroll-triggered score counter, CSS transition bars, no bounce/spin
 
 ---
 
-# Build Log — Major Feature Batch (7 Items)
+# Build Log ï¿½ Major Feature Batch (7 Items)
 
 **Date:** 12 Feb 2026
 **Builder:** Banks (subagent: major-features-batch)
@@ -494,47 +529,47 @@ px tsc --noEmit — no errors)
 
 ### ITEM 4: Job Board
 - New DB table: `jobs` (id, creator_id, title, company, description, location, salary_range, required_score, test_id, is_active, created_at)
-- `GET /api/jobs` — lists active jobs publicly
-- `POST /api/jobs/create` — create job (auth required)
-- `/jobs` — public job board page with listings
-- `/dashboard/jobs` — employer page to create/manage job listings
+- `GET /api/jobs` ï¿½ lists active jobs publicly
+- `POST /api/jobs/create` ï¿½ create job (auth required)
+- `/jobs` ï¿½ public job board page with listings
+- `/dashboard/jobs` ï¿½ employer page to create/manage job listings
 - Jobs link test_id so "Apply" goes to `/test/:id`
 - Homepage has "Open Roles" section linking to `/jobs`
 - Nav updated with Jobs link
 
 ### ITEM 5: Profile Enhancements
 - User table extended: bio, work_history, linkedin_url, skills_tags, account_type
-- `GET /api/profile` — get own profile
-- `PUT /api/profile` — update profile fields
-- `GET /api/profile/completeness` — returns percentage based on field weights
-- `GET /api/profile/[id]` — public profile with test history
-- `/dashboard/profile` — edit profile page with completeness bar
+- `GET /api/profile` ï¿½ get own profile
+- `PUT /api/profile` ï¿½ update profile fields
+- `GET /api/profile/completeness` ï¿½ returns percentage based on field weights
+- `GET /api/profile/[id]` ï¿½ public profile with test history
+- `/dashboard/profile` ï¿½ edit profile page with completeness bar
 - Profile completeness banner on dashboard if < 80%
 
 ### ITEM 6: API Integration for Businesses
 - New DB table: `api_keys` (id, user_id, key_hash, key_prefix, name, plan, rate_limit, requests_today, is_active, created_at)
-- `GET/POST /api/keys` — list/generate API keys (Pro/Business plan required)
-- `DELETE /api/keys/[id]` — revoke key
-- `src/lib/api-auth.ts` — Bearer token authentication middleware
-- `POST /api/v1/tests/create` — create test programmatically
-- `GET /api/v1/tests/[id]/results` — get test results
-- `POST /api/v1/tests/[id]/invite` — send test invitation
+- `GET/POST /api/keys` ï¿½ list/generate API keys (Pro/Business plan required)
+- `DELETE /api/keys/[id]` ï¿½ revoke key
+- `src/lib/api-auth.ts` ï¿½ Bearer token authentication middleware
+- `POST /api/v1/tests/create` ï¿½ create test programmatically
+- `GET /api/v1/tests/[id]/results` ï¿½ get test results
+- `POST /api/v1/tests/[id]/invite` ï¿½ send test invitation
 - All v1 routes check API key + subscription plan
-- `/dashboard/api` — API key management page with documentation, cURL examples
+- `/dashboard/api` ï¿½ API key management page with documentation, cURL examples
 
 ### ITEM 7: Role-Based Dashboards
 - Signup page: "Employer" / "Candidate" role selection (replaces old 3-option)
 - Role stored in DB (role + account_type fields)
 - Auth callbacks pass role to session
-- `DashboardLayout.tsx` — different sidebar nav based on role:
+- `DashboardLayout.tsx` ï¿½ different sidebar nav based on role:
   - **Employer**: Dashboard, Create Test, My Tests, Candidates, Jobs, API, Settings
   - **Candidate**: Dashboard, Job Board, My Results, Profile, Settings
 - Dashboard home page: role-aware content
   - Employer: stats cards, quick actions, recent results table
   - Candidate: PromptScore summary, recent test results
-- `/dashboard/results` — candidate's test history page
-- `/dashboard/profile` — candidate's profile edit page
-- `GET /api/candidate/stats` — candidate's PromptScore + recent results
+- `/dashboard/results` ï¿½ candidate's test history page
+- `/dashboard/profile` ï¿½ candidate's profile edit page
+- `GET /api/candidate/stats` ï¿½ candidate's PromptScore + recent results
 
 ## Files Created (19 new files)
 - `src/app/api/jobs/route.ts`
@@ -556,22 +591,22 @@ px tsc --noEmit — no errors)
 - `src/app/dashboard/results/page.tsx`
 
 ## Files Modified (15 files)
-- `src/lib/schema.ts` — added jobs, api_keys tables + user profile columns
-- `src/app/api/auth/signup/route.ts` — stores role, links guest results
-- `src/app/api/tests/[id]/route.ts` — public access for active tests + PATCH
-- `src/app/api/dashboard/stats/route.ts` — removed mock fallback
-- `src/app/api/dashboard/candidates/route.ts` — removed mock fallback
-- `src/app/dashboard/page.tsx` — role-based, real data, empty states
-- `src/app/dashboard/candidates/page.tsx` — removed mock data
-- `src/app/dashboard/tests/[id]/page.tsx` — publish toggle + share link
-- `src/app/test/[id]/page.tsx` — guest mode, real DB data
-- `src/app/test/[id]/sandbox/page.tsx` — real DB data, no mock dependency
-- `src/app/test/[id]/results/page.tsx` — no mock data, signup prompt
-- `src/app/profile/[id]/page.tsx` — real DB data, no mock fallback
-- `src/app/signup/page.tsx` — employer/candidate role selection
-- `src/components/DashboardLayout.tsx` — role-based navigation
-- `src/components/Nav.tsx` — added Jobs link
-- `src/app/page.tsx` — added Job Board section
+- `src/lib/schema.ts` ï¿½ added jobs, api_keys tables + user profile columns
+- `src/app/api/auth/signup/route.ts` ï¿½ stores role, links guest results
+- `src/app/api/tests/[id]/route.ts` ï¿½ public access for active tests + PATCH
+- `src/app/api/dashboard/stats/route.ts` ï¿½ removed mock fallback
+- `src/app/api/dashboard/candidates/route.ts` ï¿½ removed mock fallback
+- `src/app/dashboard/page.tsx` ï¿½ role-based, real data, empty states
+- `src/app/dashboard/candidates/page.tsx` ï¿½ removed mock data
+- `src/app/dashboard/tests/[id]/page.tsx` ï¿½ publish toggle + share link
+- `src/app/test/[id]/page.tsx` ï¿½ guest mode, real DB data
+- `src/app/test/[id]/sandbox/page.tsx` ï¿½ real DB data, no mock dependency
+- `src/app/test/[id]/results/page.tsx` ï¿½ no mock data, signup prompt
+- `src/app/profile/[id]/page.tsx` ï¿½ real DB data, no mock fallback
+- `src/app/signup/page.tsx` ï¿½ employer/candidate role selection
+- `src/components/DashboardLayout.tsx` ï¿½ role-based navigation
+- `src/components/Nav.tsx` ï¿½ added Jobs link
+- `src/app/page.tsx` ï¿½ added Job Board section
 
 ## Verification
 - TypeScript compilation: clean (zero errors)
@@ -582,7 +617,7 @@ px tsc --noEmit — no errors)
 
 ---
 
-# Build Log — Simplified Categories, Cover Images, Visibility & Listing Types
+# Build Log ï¿½ Simplified Categories, Cover Images, Visibility & Listing Types
 
 **Date:** 12 Feb 2026
 **Builder:** Banks (subagent: test-categories-images)
@@ -615,9 +650,9 @@ px tsc --noEmit — no errors)
 - Visibility stored in DB, listing_type determines which public page shows the test
 
 ### 5. Public Listing Pages
-- **/tests** — Assessments directory (listing_type=test)
-- **/explore** — Casual/practice tests (listing_type=casual)
-- **/jobs** — Updated to also fetch tests with listing_type=job
+- **/tests** ï¿½ Assessments directory (listing_type=test)
+- **/explore** ï¿½ Casual/practice tests (listing_type=casual)
+- **/jobs** ï¿½ Updated to also fetch tests with listing_type=job
 - All pages: search, difficulty filter, sort (newest/popular/highest score)
 - Card layout with cover images via shared PublicTestCard component
 - Empty states for each page

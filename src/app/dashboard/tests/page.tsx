@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ds } from "@/lib/designSystem";
+import TestThumbnail from "@/components/TestThumbnail";
 
 interface DbTest {
   id: number;
@@ -201,10 +202,15 @@ export default function MyTestsPage() {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={test.cover_image} alt="" className="w-10 h-10 rounded-md object-cover shrink-0 hidden sm:block" />
                       ) : (
-                        <div className="w-10 h-10 rounded-md bg-gray-100 shrink-0 hidden sm:flex items-center justify-center">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-300">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                          </svg>
+                        <div className="w-10 h-10 shrink-0 hidden sm:block">
+                          <TestThumbnail
+                            title={test.title}
+                            listingType={test.listing_type}
+                            difficulty={test.difficulty}
+                            model={test.model}
+                            variant="thumb"
+                            className="w-10 h-10 !rounded-md"
+                          />
                         </div>
                       )}
                       <div className="min-w-0">

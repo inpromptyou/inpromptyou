@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import TestThumbnail from "@/components/TestThumbnail";
 
 interface TestDetail {
   id: number;
@@ -88,12 +89,20 @@ export default function TestDetailPage() {
   return (
     <div className="p-6 lg:p-8 max-w-6xl">
       {/* Cover image banner */}
-      {test.cover_image && (
-        <div className="rounded-xl overflow-hidden mb-6 -mx-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+      <div className="rounded-xl overflow-hidden mb-6 -mx-2">
+        {test.cover_image ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img src={test.cover_image} alt="" className="w-full h-48 object-cover" />
-        </div>
-      )}
+        ) : (
+          <TestThumbnail
+            title={test.title}
+            listingType={test.listing_type}
+            difficulty={test.difficulty}
+            model={test.model}
+            variant="banner"
+          />
+        )}
+      </div>
 
       <div className="mb-8">
         <Link href="/dashboard/tests" className="text-xs text-gray-400 hover:text-gray-600 mb-2 inline-flex items-center gap-1">

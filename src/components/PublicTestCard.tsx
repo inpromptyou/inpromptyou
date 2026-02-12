@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TestThumbnail from "./TestThumbnail";
 
 export interface PublicTest {
   id: number;
@@ -36,11 +37,13 @@ export default function PublicTestCard({ test }: { test: PublicTest }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={test.cover_image} alt="" className="w-full h-40 object-cover" />
         ) : (
-          <div className="w-full h-28 bg-gradient-to-br from-indigo-50 to-violet-50 flex items-center justify-center">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-indigo-200">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-            </svg>
-          </div>
+          <TestThumbnail
+            title={test.title}
+            listingType={test.listing_type}
+            difficulty={test.difficulty}
+            model={test.model}
+            variant="card"
+          />
         )}
 
         <div className="p-4">

@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import TestThumbnail from "@/components/TestThumbnail";
 
 interface TestData {
   id: string;
@@ -103,14 +104,21 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {/* Cover image banner */}
-      {test.cover_image && (
-        <div className="w-full max-w-3xl mx-auto mt-6 px-5">
-          <div className="rounded-xl overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+      <div className="w-full max-w-3xl mx-auto mt-6 px-5">
+        <div className="rounded-xl overflow-hidden">
+          {test.cover_image ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={test.cover_image} alt="" className="w-full h-48 sm:h-56 object-cover" />
-          </div>
+          ) : (
+            <TestThumbnail
+              title={test.title}
+              listingType={test.listing_type}
+              model={test.model}
+              variant="banner"
+            />
+          )}
         </div>
-      )}
+      </div>
 
       <div className="max-w-lg mx-auto px-5 py-14">
         <div className="mb-8">
