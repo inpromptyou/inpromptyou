@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 
 const VALID_TEST_TYPES = ["email", "code", "data", "creative", "custom"];
 const VALID_DIFFICULTIES = ["beginner", "intermediate", "advanced", "expert"];
+const VALID_VISIBILITIES = ["public", "private"];
+const VALID_LISTING_TYPES = ["job", "test", "casual"];
 
 export async function POST(request: Request) {
   try {
@@ -23,6 +25,8 @@ export async function POST(request: Request) {
       title, description, taskPrompt, expectedOutcomes,
       testType, difficulty, timeLimitMinutes, maxAttempts,
       tokenBudget, model, scoringWeights, status,
+      coverImage, visibility, listingType,
+      companyName, location, salaryRange,
     } = body;
 
     // Validation
@@ -35,25 +39,31 @@ export async function POST(request: Request) {
     if (timeLimitMinutes != null && (timeLimitMinutes < 1 || timeLimitMinutes > 120)) errors.push("Time limit must be 1-120 minutes");
     if (maxAttempts != null && (maxAttempts < 1 || maxAttempts > 20)) errors.push("Max attempts must be 1-20");
     if (tokenBudget != null && (tokenBudget < 100 || tokenBudget > 50000)) errors.push("Token budget must be 100-50000");
+    if (visibility && !VALID_VISIBILITIES.includes(visibility)) errors.push("Invalid visibility");
+    if (listingType && !VALID_LISTING_TYPES.includes(listingType)) errors.push("Invalid listing type");
+    if (visibility === "public" && listingType === "job" && !companyName?.trim()) errors.push("Company name is required for job listings");
 
     if (errors.length > 0) {
       return NextResponse.json({ error: errors.join(". ") }, { status: 400 });
     }
 
-    // Ensure tables exist
     await ensureSchema();
 
     const sql = getSql();
     const rows = await sql`
       INSERT INTO tests (user_id, title, description, task_prompt, expected_outcomes, test_type, difficulty,
-                         time_limit_minutes, max_attempts, token_budget, model, scoring_weights, status)
+                         time_limit_minutes, max_attempts, token_budget, model, scoring_weights, status,
+                         cover_image, visibility, listing_type, company_name, location, salary_range)
       VALUES (${Number(userId)}, ${title.trim()}, ${description?.trim() || ""}, ${taskPrompt.trim()},
               ${expectedOutcomes?.trim() || ""}, ${testType || "custom"}, ${difficulty || "intermediate"},
               ${timeLimitMinutes || 15}, ${maxAttempts || 5}, ${tokenBudget || 2000}, ${model || "gpt-4o"},
               ${JSON.stringify(scoringWeights || { accuracy: 40, efficiency: 30, speed: 30 })},
-              ${status || "draft"})
+              ${status || "draft"},
+              ${coverImage?.trim() || null}, ${visibility || "private"}, ${listingType || "test"},
+              ${companyName?.trim() || null}, ${location?.trim() || null}, ${salaryRange?.trim() || null})
       RETURNING id, title, description, task_prompt, expected_outcomes, test_type, difficulty,
-                time_limit_minutes, max_attempts, token_budget, model, scoring_weights, status, created_at
+                time_limit_minutes, max_attempts, token_budget, model, scoring_weights, status,
+                cover_image, visibility, listing_type, company_name, location, salary_range, created_at
     `;
 
     return NextResponse.json(rows[0], { status: 201 });

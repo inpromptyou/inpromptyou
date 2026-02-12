@@ -199,22 +199,33 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ─── Job Board Teaser ─── */}
+        {/* ─── Browse Categories ─── */}
         <section className="relative">
           <div className="relative max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-28">
-            <div className="text-center mb-12">
-              <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">Jobs</p>
+            <div className="text-center mb-14">
+              <p className="text-[11px] font-mono text-indigo-400/70 uppercase tracking-wider mb-3">Browse</p>
               <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-3">
-                Open Roles — Apply by completing a test
+                Find your challenge
               </h2>
               <p className="text-sm text-gray-500 max-w-md mx-auto">
-                Companies are hiring based on real AI skills. Take a test, get a PromptScore, land the role.
+                Professional assessments, job opportunities, or casual practice — pick your path.
               </p>
             </div>
-            <div className="text-center">
-              <Link href="/jobs" className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors">
-                Browse Open Roles →
-              </Link>
+            <div className="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden">
+              {[
+                { icon: "📋", title: "Assessments", desc: "Professional AI prompting tests. Prove your skills with a PromptScore.", href: "/tests", cta: "Browse Assessments" },
+                { icon: "💼", title: "Jobs", desc: "Real job openings. Apply by completing a prompting challenge.", href: "/jobs", cta: "Browse Jobs" },
+                { icon: "🎮", title: "Explore", desc: "Fun, casual challenges. Sharpen your AI skills at your own pace.", href: "/explore", cta: "Start Exploring" },
+              ].map((item) => (
+                <div key={item.title} className="bg-[#0C1120] p-7 flex flex-col">
+                  <span className="text-2xl mb-3">{item.icon}</span>
+                  <h3 className="text-base font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-5 flex-1">{item.desc}</p>
+                  <Link href={item.href} className="text-[13px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+                    {item.cta} →
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
         </section>

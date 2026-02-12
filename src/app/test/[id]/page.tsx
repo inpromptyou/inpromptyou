@@ -13,6 +13,11 @@ interface TestData {
   max_attempts: number;
   time_limit_minutes: number;
   token_budget: number;
+  cover_image: string | null;
+  company_name: string | null;
+  location: string | null;
+  salary_range: string | null;
+  listing_type: string;
 }
 
 export default function TestLandingPage({ params }: { params: Promise<{ id: string }> }) {
@@ -42,6 +47,11 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
             max_attempts: d.max_attempts || 5,
             time_limit_minutes: d.time_limit_minutes || 15,
             token_budget: d.token_budget || 2000,
+            cover_image: d.cover_image || null,
+            company_name: d.company_name || null,
+            location: d.location || null,
+            salary_range: d.salary_range || null,
+            listing_type: d.listing_type || "test",
           });
         } else {
           setError("Test not found");
@@ -58,7 +68,6 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
     if (!name.trim()) { setFormError("Name is required"); return; }
     if (!email.trim() || !email.includes("@")) { setFormError("Valid email is required"); return; }
 
-    // Store guest info in sessionStorage for the sandbox to use
     sessionStorage.setItem(`guest-${id}`, JSON.stringify({ name: name.trim(), email: email.trim() }));
     router.push(`/test/${id}/sandbox`);
   };
@@ -93,11 +102,33 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
+      {/* Cover image banner */}
+      {test.cover_image && (
+        <div className="w-full max-w-3xl mx-auto mt-6 px-5">
+          <div className="rounded-xl overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={test.cover_image} alt="" className="w-full h-48 sm:h-56 object-cover" />
+          </div>
+        </div>
+      )}
+
       <div className="max-w-lg mx-auto px-5 py-14">
         <div className="mb-8">
-          <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{modelLabel}</span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{modelLabel}</span>
+            {test.listing_type === "job" && (
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">Job</span>
+            )}
+          </div>
           <h1 className="text-2xl font-bold text-gray-900 mt-1 mb-2">{test.title}</h1>
           <p className="text-sm text-gray-600 leading-relaxed">{test.description}</p>
+          {test.listing_type === "job" && test.company_name && (
+            <div className="flex flex-wrap gap-3 mt-2 text-xs text-gray-400">
+              <span>🏢 {test.company_name}</span>
+              {test.location && <span>📍 {test.location}</span>}
+              {test.salary_range && <span>💰 {test.salary_range}</span>}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-4 gap-3 mb-8">
@@ -143,10 +174,7 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
             <div>
               <label htmlFor="name" className="block text-xs font-medium text-gray-500 mb-1">Full Name *</label>
               <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                id="name" type="text" value={name} onChange={(e) => setName(e.target.value)}
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                 placeholder="Your full name"
               />
@@ -154,10 +182,7 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
             <div>
               <label htmlFor="email" className="block text-xs font-medium text-gray-500 mb-1">Email Address *</label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                 placeholder="you@example.com"
               />

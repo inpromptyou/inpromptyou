@@ -43,8 +43,10 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
           {/* Center nav links — subtle, no pills */}
           <div className="hidden md:flex items-center gap-1">
             {[
-              { label: "How It Works", href: "/how-it-works" },
+              { label: "Assessments", href: "/tests" },
               { label: "Jobs", href: "/jobs" },
+              { label: "Explore", href: "/explore" },
+              { label: "How It Works", href: "/how-it-works" },
               { label: "Pricing", href: "/pricing" },
               { label: "Leaderboard", href: "/leaderboard" },
             ].map((link) => (
@@ -115,8 +117,10 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
       >
         <div className={`px-5 pb-4 pt-2 space-y-1 ${isDark ? "border-t border-white/[0.04]" : "border-t border-gray-100"}`}>
           {[
-            { label: "How It Works", href: "/how-it-works" },
+            { label: "Assessments", href: "/tests" },
             { label: "Jobs", href: "/jobs" },
+            { label: "Explore", href: "/explore" },
+            { label: "How It Works", href: "/how-it-works" },
             { label: "Pricing", href: "/pricing" },
             { label: "Leaderboard", href: "/leaderboard" },
           ].map((link) => (

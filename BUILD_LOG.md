@@ -579,3 +579,88 @@ px tsc --noEmit — no errors)
 - Dark indigo theme maintained
 - Proper empty states throughout
 - Mobile responsive (existing patterns followed)
+
+---
+
+# Build Log — Simplified Categories, Cover Images, Visibility & Listing Types
+
+**Date:** 12 Feb 2026
+**Builder:** Banks (subagent: test-categories-images)
+
+---
+
+## What Was Built
+
+### 1. DB Schema Updates (src/lib/schema.ts)
+- Added columns to 	ests table: cover_image, isibility, listing_type, company_name, location, salary_range
+- Safe migration: ALTER TABLE ADD COLUMN IF NOT EXISTS for existing DBs
+
+### 2. Simplified "My Tests" Page (src/app/dashboard/tests/page.tsx)
+- **Filter tabs**: All | Active | Draft | Archived with counts
+- **Test rows**: thumbnail, name, type badge (Job/Test/Casual), visibility (Public/Private), candidates, avg score, created date
+- **Quick actions**: Edit, Publish/Unpublish, Share Link, Archive, Delete (hover-to-reveal)
+- Clean flat list, no nested categories
+
+### 3. Cover Images
+- **Create form**: Cover Image URL field with live preview
+- **My Tests list**: small thumbnail per row
+- **Test landing page** (/test/[id]): hero banner image
+- **Test detail page**: banner at top
+- **Public test cards**: card header image
+- API routes updated to handle cover_image
+
+### 4. Public/Private Visibility + Listing Type
+- **Create form step 3** "Visibility & Listing": Public/Private toggle, listing type selector (Job/Assessment/Casual)
+- **Job listing type**: shows company name, location, salary range fields
+- Visibility stored in DB, listing_type determines which public page shows the test
+
+### 5. Public Listing Pages
+- **/tests** — Assessments directory (listing_type=test)
+- **/explore** — Casual/practice tests (listing_type=casual)
+- **/jobs** — Updated to also fetch tests with listing_type=job
+- All pages: search, difficulty filter, sort (newest/popular/highest score)
+- Card layout with cover images via shared PublicTestCard component
+- Empty states for each page
+
+### 6. Public API (src/app/api/tests/public/route.ts)
+- GET /api/tests/public?listing_type=&q=&sort=&difficulty=
+- Filters by visibility=public, status=active
+- Joins creator name
+
+### 7. Nav Updated
+- Added: Assessments, Explore links (desktop + mobile)
+
+### 8. Homepage Updated
+- Replaced "Open Roles" section with "Browse" section featuring all 3 categories (Assessments, Jobs, Explore) with CTAs
+
+### 9. Test Detail Page
+- Shows cover image banner, visibility badge, listing type badge, job details
+
+### 10. Delete API
+- Added DELETE /api/tests/[id] for test deletion with ownership check
+
+## Files Created
+- src/app/api/tests/public/route.ts
+- src/app/tests/page.tsx
+- src/app/explore/page.tsx
+- src/components/PublicTestCard.tsx
+- src/components/PublicListingPage.tsx
+
+## Files Modified
+- src/lib/schema.ts
+- src/app/api/tests/create/route.ts
+- src/app/api/tests/route.ts
+- src/app/api/tests/[id]/route.ts
+- src/app/dashboard/create/page.tsx
+- src/app/dashboard/tests/page.tsx
+- src/app/dashboard/tests/[id]/page.tsx
+- src/app/test/[id]/page.tsx
+- src/app/jobs/page.tsx
+- src/app/page.tsx
+- src/components/Nav.tsx
+
+## Verification
+- TypeScript compilation: clean (zero errors)
+- Responsive design maintained
+- Dark indigo theme consistent
+- Empty states for all listing pages

@@ -18,6 +18,12 @@ interface TestDetail {
   model: string;
   scoring_weights: { accuracy: number; efficiency: number; speed: number };
   status: string;
+  cover_image: string | null;
+  visibility: string;
+  listing_type: string;
+  company_name: string | null;
+  location: string | null;
+  salary_range: string | null;
   candidates_count: number;
   avg_score: number;
   completion_rate: number;
@@ -77,23 +83,47 @@ export default function TestDetailPage() {
   );
 
   const weights = typeof test.scoring_weights === "string" ? JSON.parse(test.scoring_weights) : (test.scoring_weights || { accuracy: 40, efficiency: 30, speed: 30 });
+  const listingLabels: Record<string, string> = { job: "💼 Job Listing", test: "📋 Assessment", casual: "🎮 Casual" };
 
   return (
     <div className="p-6 lg:p-8 max-w-6xl">
+      {/* Cover image banner */}
+      {test.cover_image && (
+        <div className="rounded-xl overflow-hidden mb-6 -mx-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={test.cover_image} alt="" className="w-full h-48 object-cover" />
+        </div>
+      )}
+
       <div className="mb-8">
         <Link href="/dashboard/tests" className="text-xs text-gray-400 hover:text-gray-600 mb-2 inline-flex items-center gap-1">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
           Back to My Tests
         </Link>
-        <div className="flex items-center gap-3 mt-2">
+        <div className="flex items-center gap-3 mt-2 flex-wrap">
           <h1 className="text-xl font-bold text-gray-900">{test.title}</h1>
           <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-            test.status === "active" ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-500"
+            test.status === "active" ? "bg-emerald-50 text-emerald-700" : test.status === "archived" ? "bg-gray-100 text-gray-400" : "bg-gray-100 text-gray-500"
           }`}>
             {test.status.charAt(0).toUpperCase() + test.status.slice(1)}
           </span>
+          <span className="text-xs text-gray-400">
+            {test.visibility === "public" ? "🌐 Public" : "🔒 Private"}
+          </span>
+          <span className="text-xs text-gray-400">
+            {listingLabels[test.listing_type] || "📋 Assessment"}
+          </span>
         </div>
         <p className="text-gray-500 text-sm mt-1">{test.description || "No description"}</p>
+
+        {/* Job details */}
+        {test.listing_type === "job" && test.company_name && (
+          <div className="flex flex-wrap gap-3 mt-2 text-xs text-gray-400">
+            <span>🏢 {test.company_name}</span>
+            {test.location && <span>📍 {test.location}</span>}
+            {test.salary_range && <span>💰 {test.salary_range}</span>}
+          </div>
+        )}
 
         {/* Actions */}
         <div className="flex gap-3 mt-4">
@@ -141,6 +171,8 @@ export default function TestDetailPage() {
             <div className="flex justify-between"><span className="text-gray-500">Difficulty</span><span className="text-gray-900 capitalize">{test.difficulty}</span></div>
             <div className="flex justify-between"><span className="text-gray-500">Max Attempts</span><span className="text-gray-900">{test.max_attempts}</span></div>
             <div className="flex justify-between"><span className="text-gray-500">Token Budget</span><span className="text-gray-900">{test.token_budget.toLocaleString()}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Visibility</span><span className="text-gray-900 capitalize">{test.visibility}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Listing</span><span className="text-gray-900 capitalize">{test.listing_type}</span></div>
             <div className="flex justify-between"><span className="text-gray-500">Created</span><span className="text-gray-900">{new Date(test.created_at).toLocaleDateString()}</span></div>
           </div>
         </div>

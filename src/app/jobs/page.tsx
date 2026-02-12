@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { PublicTest } from "@/components/PublicTestCard";
 
 interface Job {
   id: number;
@@ -19,16 +20,21 @@ interface Job {
 }
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [legacyJobs, setLegacyJobs] = useState<Job[]>([]);
+  const [testJobs, setTestJobs] = useState<PublicTest[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/jobs")
-      .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setJobs(d); })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetch("/api/jobs").then((r) => r.json()).catch(() => []),
+      fetch("/api/tests/public?listing_type=job").then((r) => r.json()).catch(() => []),
+    ]).then(([jobs, tests]) => {
+      if (Array.isArray(jobs)) setLegacyJobs(jobs);
+      if (Array.isArray(tests)) setTestJobs(tests);
+    }).finally(() => setLoading(false));
   }, []);
+
+  const hasContent = legacyJobs.length > 0 || testJobs.length > 0;
 
   return (
     <>
@@ -42,15 +48,48 @@ export default function JobsPage() {
 
           {loading ? (
             <div className="text-center py-16 text-gray-400 text-sm">Loading jobs...</div>
-          ) : jobs.length === 0 ? (
+          ) : !hasContent ? (
             <div className="bg-white rounded-lg border border-gray-200 px-5 py-16 text-center">
+              <div className="text-3xl mb-3">💼</div>
               <p className="text-gray-400 text-sm mb-2">No open roles at the moment</p>
               <p className="text-xs text-gray-300">Check back soon — employers are adding new listings regularly</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {jobs.map((job) => (
-                <div key={job.id} className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-all">
+              {/* Tests with listing_type=job */}
+              {testJobs.map((test) => (
+                <div key={`test-${test.id}`} className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-all">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4 flex-1 min-w-0">
+                      {test.cover_image && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={test.cover_image} alt="" className="w-14 h-14 rounded-lg object-cover shrink-0 hidden sm:block" />
+                      )}
+                      <div className="min-w-0">
+                        <h2 className="text-lg font-semibold text-gray-900">{test.title}</h2>
+                        {test.company_name && <p className="text-sm text-[#6366F1] font-medium mt-0.5">{test.company_name}</p>}
+                        {test.description && <p className="text-sm text-gray-500 mt-2 line-clamp-2">{test.description}</p>}
+                        <div className="flex flex-wrap gap-3 mt-3 text-xs text-gray-400">
+                          {test.location && <span>📍 {test.location}</span>}
+                          {test.salary_range && <span>💰 {test.salary_range}</span>}
+                          <span>👥 {test.candidates_count} applicants</span>
+                          <span>Posted {new Date(test.created_at).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <Link
+                      href={`/test/${test.id}`}
+                      className="shrink-0 ml-4 bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Apply →
+                    </Link>
+                  </div>
+                </div>
+              ))}
+
+              {/* Legacy jobs from jobs table */}
+              {legacyJobs.map((job) => (
+                <div key={`job-${job.id}`} className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-all">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <h2 className="text-lg font-semibold text-gray-900">{job.title}</h2>

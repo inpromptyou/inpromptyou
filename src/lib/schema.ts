@@ -50,6 +50,12 @@ export async function ensureSchema() {
       model VARCHAR(100) DEFAULT 'gpt-4o',
       scoring_weights JSONB DEFAULT '{"accuracy": 40, "efficiency": 30, "speed": 30}',
       status VARCHAR(20) DEFAULT 'draft',
+      cover_image TEXT,
+      visibility VARCHAR(20) DEFAULT 'private',
+      listing_type VARCHAR(20) DEFAULT 'test',
+      company_name VARCHAR(255),
+      location VARCHAR(255),
+      salary_range VARCHAR(100),
       candidates_count INTEGER DEFAULT 0,
       avg_score NUMERIC(5,2) DEFAULT 0,
       completion_rate NUMERIC(5,2) DEFAULT 0,
@@ -57,6 +63,17 @@ export async function ensureSchema() {
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
     )
   `;
+
+  // Add new columns if they don't exist (safe for existing DBs)
+  await sql`DO $$ BEGIN
+    ALTER TABLE tests ADD COLUMN IF NOT EXISTS cover_image TEXT;
+    ALTER TABLE tests ADD COLUMN IF NOT EXISTS visibility VARCHAR(20) DEFAULT 'private';
+    ALTER TABLE tests ADD COLUMN IF NOT EXISTS listing_type VARCHAR(20) DEFAULT 'test';
+    ALTER TABLE tests ADD COLUMN IF NOT EXISTS company_name VARCHAR(255);
+    ALTER TABLE tests ADD COLUMN IF NOT EXISTS location VARCHAR(255);
+    ALTER TABLE tests ADD COLUMN IF NOT EXISTS salary_range VARCHAR(100);
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END $$`;
 
   await sql`
     CREATE TABLE IF NOT EXISTS test_attempts (
