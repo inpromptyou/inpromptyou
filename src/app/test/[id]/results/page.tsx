@@ -56,7 +56,7 @@ function ScoreDistributionChart({ userScore }: { userScore: number }) {
             <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative">
               <div
                 className={`h-full rounded-sm transition-all duration-1000 ease-out ${
-                  isUser ? "bg-[#1B5B7D]" : "bg-gray-300"
+                  isUser ? "bg-[#6366F1]" : "bg-gray-300"
                 }`}
                 style={{ width: `${pct}%` }}
               />
@@ -119,7 +119,7 @@ function AttemptTimeline({ messages }: { messages: StoredMessage[] }) {
               className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-[#1B5B7D] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                <div className="w-7 h-7 rounded-full bg-[#6366F1] text-white flex items-center justify-center text-xs font-bold shrink-0">
                   {pair.index + 1}
                 </div>
                 <div className="min-w-0">
@@ -149,7 +149,7 @@ function AttemptTimeline({ messages }: { messages: StoredMessage[] }) {
             {isExpanded && (
               <div className="border-t border-gray-100 px-4 py-3 space-y-3">
                 <div>
-                  <span className="text-[10px] font-semibold text-[#1B5B7D] uppercase tracking-wide">
+                  <span className="text-[10px] font-semibold text-[#6366F1] uppercase tracking-wide">
                     Your Prompt
                   </span>
                   <p className="text-sm text-gray-700 mt-1 whitespace-pre-wrap leading-relaxed">
@@ -224,7 +224,7 @@ function EmployerPanel({
             </h4>
             <p className="text-sm text-gray-700">
               This candidate ranked{" "}
-              <span className="font-bold text-[#1B5B7D]">
+              <span className="font-bold text-[#6366F1]">
                 #{candidateRank}
               </span>{" "}
               out of {candidates.length + 1} candidates for this test.
@@ -414,7 +414,7 @@ export default function TestResultsPage({
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-[#1B5B7D] border-t-transparent rounded-full mx-auto mb-3" />
+          <div className="animate-spin w-8 h-8 border-2 border-[#6366F1] border-t-transparent rounded-full mx-auto mb-3" />
           <p className="text-sm text-gray-400">Calculating your score...</p>
         </div>
       </div>
@@ -444,7 +444,7 @@ export default function TestResultsPage({
       </div>
 
       {/* Test Info Banner */}
-      <div className="bg-[#0C2A3A] text-white">
+      <div className="bg-[#0A0F1C] text-white">
         <div className="max-w-3xl mx-auto px-5 py-6">
           <h1 className="text-lg font-bold mb-1">{test.name}</h1>
           <p className="text-sm text-gray-300 leading-relaxed mb-3">
@@ -480,7 +480,7 @@ export default function TestResultsPage({
               onClick={() => setActiveTab(tab.key)}
               className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
-                  ? "border-[#1B5B7D] text-[#1B5B7D]"
+                  ? "border-[#6366F1] text-[#6366F1]"
                   : "border-transparent text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -580,7 +580,7 @@ export default function TestResultsPage({
                   Iteration Intelligence
                 </h3>
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="text-3xl font-bold text-[#1B5B7D]">
+                  <div className="text-3xl font-bold text-[#6366F1]">
                     {result.dimensions.iterationIQ.score}
                   </div>
                   <div className="text-xs text-gray-400">/ 100</div>
@@ -598,7 +598,7 @@ export default function TestResultsPage({
                   <div className="space-y-1">
                     {result.dimensions.iterationIQ.suggestions.map((s, i) => (
                       <p key={i} className="text-xs text-gray-500 flex items-start gap-1.5">
-                        <span className="text-[#1B5B7D] shrink-0">→</span> {s}
+                        <span className="text-[#6366F1] shrink-0">→</span> {s}
                       </p>
                     ))}
                   </div>
@@ -616,7 +616,7 @@ export default function TestResultsPage({
               <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
                 Your Percentile
               </p>
-              <div className="text-5xl font-bold text-[#1B5B7D] mb-1">
+              <div className="text-5xl font-bold text-[#6366F1] mb-1">
                 {result.percentile}
                 <span className="text-lg text-gray-400 font-normal">th</span>
               </div>
@@ -634,11 +634,11 @@ export default function TestResultsPage({
                 <div>
                   <div className="flex justify-between text-xs text-gray-500 mb-1">
                     <span>Your Score</span>
-                    <span className="font-bold text-[#1B5B7D]">{result.promptScore}</span>
+                    <span className="font-bold text-[#6366F1]">{result.promptScore}</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
                     <div
-                      className="bg-[#1B5B7D] h-full rounded-full"
+                      className="bg-[#6366F1] h-full rounded-full"
                       style={{ width: `${result.promptScore}%` }}
                     />
                   </div>
@@ -681,7 +681,7 @@ export default function TestResultsPage({
           <div className="relative">
             <button
               onClick={handleShare}
-              className="w-full bg-[#1B5B7D] hover:bg-[#14455E] text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
+              className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />

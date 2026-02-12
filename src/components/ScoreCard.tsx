@@ -220,7 +220,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
   };
 
   const dimensionConfig = [
-    { key: "promptQuality" as const, label: "Prompt Quality", color: "bg-[#1B5B7D]" },
+    { key: "promptQuality" as const, label: "Prompt Quality", color: "bg-[#6366F1]" },
     { key: "responseQuality" as const, label: "Response Quality", color: "bg-emerald-500" },
     { key: "efficiency" as const, label: "Efficiency", color: "bg-blue-500" },
     { key: "speed" as const, label: "Speed", color: "bg-purple-500" },
@@ -336,7 +336,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
         {/* Toggle detailed view */}
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="mt-4 text-xs text-[#1B5B7D] hover:text-[#14455E] font-medium flex items-center gap-1"
+          className="mt-4 text-xs text-[#6366F1] hover:text-[#4F46E5] font-medium flex items-center gap-1"
         >
           {showDetails ? "Hide" : "Show"} detailed feedback
           <svg
@@ -374,7 +374,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
                     <ul className="space-y-1">
                       {d.suggestions.map((s, i) => (
                         <li key={i} className="text-xs text-gray-500 flex items-start gap-1.5">
-                          <span className="text-[#1B5B7D] shrink-0">→</span> {s}
+                          <span className="text-[#6366F1] shrink-0">→</span> {s}
                         </li>
                       ))}
                     </ul>
@@ -399,7 +399,7 @@ export default function ScoreCard({ result, testName }: ScoreCardProps) {
         <div className="relative">
           <button
             onClick={handleShare}
-            className="bg-[#1B5B7D] hover:bg-[#14455E] text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />

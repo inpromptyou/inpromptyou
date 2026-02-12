@@ -54,7 +54,7 @@ export default function DashboardHome() {
 
       {/* Quick Actions */}
       <div className="flex gap-3 mb-8">
-        <Link href="/dashboard/create" className="flex items-center gap-2 bg-[#1B5B7D] hover:bg-[#14455E] text-white rounded-md px-4 py-2.5 text-sm font-medium transition-colors">
+        <Link href="/dashboard/create" className="flex items-center gap-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-md px-4 py-2.5 text-sm font-medium transition-colors">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
           </svg>
@@ -69,7 +69,7 @@ export default function DashboardHome() {
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-900">Recent Results</h2>
-          <Link href="/dashboard/candidates" className="text-xs text-[#1B5B7D] hover:text-[#14455E] font-medium">View all</Link>
+          <Link href="/dashboard/candidates" className="text-xs text-[#6366F1] hover:text-[#4F46E5] font-medium">View all</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">

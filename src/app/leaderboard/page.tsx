@@ -79,7 +79,7 @@ export default function LeaderboardPage() {
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <Link href={`/profile/${person.rank}`} className="font-medium text-gray-900 hover:text-[#1B5B7D] transition-colors">
+                      <Link href={`/profile/${person.rank}`} className="font-medium text-gray-900 hover:text-[#6366F1] transition-colors">
                         {person.name}
                       </Link>
                     </td>
@@ -98,7 +98,7 @@ export default function LeaderboardPage() {
           <div className="mt-8">
             <p className="text-sm text-gray-400">
               Want to see your name here?{" "}
-              <Link href="/signup" className="text-[#1B5B7D] hover:text-[#14455E] font-medium">
+              <Link href="/signup" className="text-[#6366F1] hover:text-[#4F46E5] font-medium">
                 Take a test
               </Link>
             </p>

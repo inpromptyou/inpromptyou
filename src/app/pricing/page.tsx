@@ -92,7 +92,7 @@ export default function PricingPage() {
             <span className={`text-sm font-medium ${!annual ? "text-gray-900" : "text-gray-400"}`}>Monthly</span>
             <button
               onClick={() => setAnnual(!annual)}
-              className={`relative w-10 h-5 rounded-full transition-colors ${annual ? "bg-[#1B5B7D]" : "bg-gray-300"}`}
+              className={`relative w-10 h-5 rounded-full transition-colors ${annual ? "bg-[#6366F1]" : "bg-gray-300"}`}
               aria-label="Toggle annual pricing"
             >
               <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${annual ? "translate-x-5" : ""}`} />
@@ -134,7 +134,7 @@ export default function PricingPage() {
                   href={plan.name === "Enterprise" ? "#" : "/signup"}
                   className={`block text-center py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                     plan.highlight
-                      ? "bg-[#1B5B7D] text-white hover:bg-[#14455E]"
+                      ? "bg-[#6366F1] text-white hover:bg-[#4F46E5]"
                       : "bg-gray-900 text-white hover:bg-gray-800"
                   }`}
                 >

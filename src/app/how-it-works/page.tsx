@@ -21,7 +21,7 @@ export default function HowItWorksPage() {
         {/* For Test Creators */}
         <section className="bg-white border-b border-gray-200/60">
           <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 py-16 md:py-20">
-            <p className="text-sm font-medium text-[#1B5B7D] mb-3 uppercase tracking-wide">For test creators</p>
+            <p className="text-sm font-medium text-[#6366F1] mb-3 uppercase tracking-wide">For test creators</p>
             <h2 className="text-2xl font-bold text-gray-900 mb-10">Set up an assessment in under five minutes</h2>
 
             <div className="space-y-12">
@@ -135,7 +135,7 @@ export default function HowItWorksPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Ready to try it?</h2>
             <p className="text-gray-400 mb-8">Create your first assessment in under five minutes, or take a sample test to see the candidate experience.</p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/signup" className="inline-flex items-center justify-center bg-[#1B5B7D] hover:bg-[#14455E] text-white px-6 py-3 rounded-md font-medium text-sm transition-colors">
+              <Link href="/signup" className="inline-flex items-center justify-center bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-md font-medium text-sm transition-colors">
                 Sign up free
               </Link>
               <Link href="/test/test-001" className="inline-flex items-center justify-center border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 px-6 py-3 rounded-md font-medium text-sm transition-colors">

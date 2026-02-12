@@ -13,7 +13,7 @@ export default function SettingsPage() {
   const Toggle = ({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) => (
     <button
       onClick={() => onChange(!checked)}
-      className={`relative w-9 h-5 rounded-full transition-colors ${checked ? "bg-[#1B5B7D]" : "bg-gray-300"}`}
+      className={`relative w-9 h-5 rounded-full transition-colors ${checked ? "bg-[#6366F1]" : "bg-gray-300"}`}
     >
       <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${checked ? "translate-x-4" : ""}`} />
     </button>
@@ -37,7 +37,7 @@ export default function SettingsPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
               />
             </div>
             <div>
@@ -46,7 +46,7 @@ export default function SettingsPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
               />
             </div>
             <div>
@@ -55,19 +55,19 @@ export default function SettingsPage() {
                 type="text"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Role</label>
-              <select className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent bg-white">
+              <select className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent bg-white">
                 <option>Employer</option>
                 <option>Educator</option>
                 <option>Individual</option>
               </select>
             </div>
           </div>
-          <button className="bg-[#1B5B7D] hover:bg-[#14455E] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          <button className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
             Save Changes
           </button>
         </div>
@@ -114,7 +114,7 @@ export default function SettingsPage() {
             <button className="text-xs text-red-500 hover:text-red-600 font-medium">Revoke</button>
           </div>
         </div>
-        <button className="text-xs text-[#1B5B7D] hover:text-[#14455E] font-medium">Generate new key</button>
+        <button className="text-xs text-[#6366F1] hover:text-[#4F46E5] font-medium">Generate new key</button>
       </div>
 
       {/* Billing */}
@@ -129,9 +129,9 @@ export default function SettingsPage() {
           <span className="text-[11px] font-medium text-emerald-600">Active</span>
         </div>
         <div className="flex gap-3 text-xs">
-          <button className="text-[#1B5B7D] hover:text-[#14455E] font-medium">Manage subscription</button>
+          <button className="text-[#6366F1] hover:text-[#4F46E5] font-medium">Manage subscription</button>
           <span className="text-gray-300">|</span>
-          <button className="text-[#1B5B7D] hover:text-[#14455E] font-medium">View invoices</button>
+          <button className="text-[#6366F1] hover:text-[#4F46E5] font-medium">View invoices</button>
         </div>
       </div>
     </div>

@@ -41,7 +41,7 @@ export default function MyTestsPage() {
           <h1 className="text-xl font-bold text-gray-900">My Tests</h1>
           <p className="text-gray-500 text-sm mt-1">Manage assessments and track performance</p>
         </div>
-        <Link href="/dashboard/create" className="bg-[#1B5B7D] hover:bg-[#14455E] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        <Link href="/dashboard/create" className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
           Create New Test
         </Link>
       </div>
@@ -57,7 +57,7 @@ export default function MyTestsPage() {
       {!loading && !error && tests.length === 0 && (
         <div className="text-center py-16">
           <p className="text-gray-400 text-sm mb-4">No tests yet. Create your first assessment!</p>
-          <Link href="/dashboard/create" className="bg-[#1B5B7D] hover:bg-[#14455E] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          <Link href="/dashboard/create" className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
             Create New Test
           </Link>
         </div>

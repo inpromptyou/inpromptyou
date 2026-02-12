@@ -182,11 +182,11 @@ export default function DemoTestPage() {
             </p>
           </div>
 
-          <div className="bg-[#0C2A3A] rounded-lg p-6 text-center">
+          <div className="bg-[#0A0F1C] rounded-lg p-6 text-center">
             <h2 className="text-lg font-bold text-white mb-2">Ready to create your own tests?</h2>
             <p className="text-sm text-gray-400 mb-4">Set up an assessment in under 5 minutes. Free plan includes 3 tests/month.</p>
             <div className="flex flex-col gap-2">
-              <Link href="/signup" className="bg-[#1B5B7D] hover:bg-[#14455E] text-white px-5 py-2.5 rounded-md text-sm font-medium transition-colors">
+              <Link href="/signup" className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-5 py-2.5 rounded-md text-sm font-medium transition-colors">
                 Sign up for free
               </Link>
               <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
@@ -238,7 +238,7 @@ export default function DemoTestPage() {
 
           <button
             onClick={() => setPhase("sandbox")}
-            className="w-full bg-[#1B5B7D] hover:bg-[#14455E] text-white py-3 rounded-md text-sm font-medium transition-colors"
+            className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white py-3 rounded-md text-sm font-medium transition-colors"
           >
             Start Demo Test
           </button>
@@ -287,7 +287,7 @@ export default function DemoTestPage() {
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[75%] rounded-lg px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                   m.role === "user"
-                    ? "bg-[#1B5B7D] text-white"
+                    ? "bg-[#6366F1] text-white"
                     : "bg-gray-800 text-gray-300"
                 }`}>
                   {m.role === "assistant" && <span className="text-gray-500 text-[10px] block mb-1.5">{DEMO_TASK.model}</span>}
@@ -314,13 +314,13 @@ export default function DemoTestPage() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                   placeholder="Type your prompt..."
-                  className="flex-1 bg-gray-800 text-white rounded-md px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] placeholder-gray-600"
+                  className="flex-1 bg-gray-800 text-white rounded-md px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] placeholder-gray-600"
                   disabled={sending}
                 />
                 <button
                   onClick={handleSend}
                   disabled={sending || !input.trim()}
-                  className="bg-[#1B5B7D] hover:bg-[#14455E] disabled:opacity-40 text-white px-4 py-2.5 rounded-md text-sm font-medium transition-colors"
+                  className="bg-[#6366F1] hover:bg-[#4F46E5] disabled:opacity-40 text-white px-4 py-2.5 rounded-md text-sm font-medium transition-colors"
                 >
                   Send
                 </button>

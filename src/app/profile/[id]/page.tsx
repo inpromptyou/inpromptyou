@@ -109,7 +109,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
                       <div className="flex items-center gap-3 flex-1">
                         <span className="text-sm text-gray-600 w-28">{cat.category}</span>
                         <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full rounded-full bg-[#1B5B7D] transition-all" style={{ width: `${cat.score}%` }} />
+                          <div className="h-full rounded-full bg-[#6366F1] transition-all" style={{ width: `${cat.score}%` }} />
                         </div>
                       </div>
                       <div className="flex items-center gap-3 ml-3">
@@ -164,7 +164,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
           </div>
 
           <div className="mt-6">
-            <Link href="/leaderboard" className="text-sm text-[#1B5B7D] hover:text-[#14455E] font-medium">
+            <Link href="/leaderboard" className="text-sm text-[#6366F1] hover:text-[#4F46E5] font-medium">
               View Full Leaderboard
             </Link>
           </div>

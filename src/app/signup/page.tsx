@@ -116,7 +116,7 @@ export default function SignupPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                   placeholder="Jane Doe"
                 />
               </div>
@@ -127,7 +127,7 @@ export default function SignupPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                   placeholder="you@company.com"
                 />
               </div>
@@ -138,7 +138,7 @@ export default function SignupPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                   placeholder="Minimum 8 characters"
                 />
               </div>
@@ -156,7 +156,7 @@ export default function SignupPage() {
                       onClick={() => setAccountType(type.value)}
                       className={`py-2 px-3 rounded-md text-sm font-medium border transition-colors ${
                         accountType === type.value
-                          ? "border-[#1B5B7D] bg-[#1B5B7D]/10 text-[#1B5B7D]"
+                          ? "border-[#6366F1] bg-[#6366F1]/10 text-[#6366F1]"
                           : "border-gray-200 text-gray-600 hover:border-gray-300"
                       }`}
                     >
@@ -168,7 +168,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#1B5B7D] hover:bg-[#14455E] disabled:opacity-60 text-white py-2.5 rounded-md text-sm font-medium transition-colors"
+                className="w-full bg-[#6366F1] hover:bg-[#4F46E5] disabled:opacity-60 text-white py-2.5 rounded-md text-sm font-medium transition-colors"
               >
                 {loading ? "Creating account..." : "Create account"}
               </button>
@@ -183,7 +183,7 @@ export default function SignupPage() {
 
           <p className="text-center text-sm text-gray-500 mt-6">
             Already have an account?{" "}
-            <Link href="/login" className="text-[#1B5B7D] hover:text-[#14455E] font-medium">Log in</Link>
+            <Link href="/login" className="text-[#6366F1] hover:text-[#4F46E5] font-medium">Log in</Link>
           </p>
         </div>
       </div>

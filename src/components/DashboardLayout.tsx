@@ -114,7 +114,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="p-3 border-t border-[#14374A]">
         <div className="flex items-center gap-2.5 px-3 py-2">
-          <div className="w-7 h-7 rounded-full bg-[#1B5B7D] flex items-center justify-center text-white text-xs font-medium">JD</div>
+          <div className="w-7 h-7 rounded-full bg-[#6366F1] flex items-center justify-center text-white text-xs font-medium">JD</div>
           <div>
             <p className="text-sm text-white leading-none">Jane Doe</p>
             <p className="text-xs text-gray-600 mt-0.5">jane@company.com</p>
@@ -127,7 +127,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Desktop sidebar */}
-      <aside className="w-56 bg-[#0C2A3A] text-gray-400 flex-col shrink-0 hidden md:flex">
+      <aside className="w-56 bg-[#0A0F1C] text-gray-400 flex-col shrink-0 hidden md:flex">
         {sidebarContent}
       </aside>
 
@@ -139,7 +139,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Mobile sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed inset-y-0 left-0 w-64 bg-[#0C2A3A] text-gray-400 flex flex-col z-50 md:hidden transform transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 w-64 bg-[#0A0F1C] text-gray-400 flex flex-col z-50 md:hidden transform transition-transform duration-300 ease-in-out ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

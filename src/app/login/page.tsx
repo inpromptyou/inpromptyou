@@ -94,7 +94,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                   placeholder="you@company.com"
                 />
               </div>
@@ -105,14 +105,14 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                   placeholder="Your password"
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#1B5B7D] hover:bg-[#14455E] disabled:opacity-60 text-white py-2.5 rounded-md text-sm font-medium transition-colors"
+                className="w-full bg-[#6366F1] hover:bg-[#4F46E5] disabled:opacity-60 text-white py-2.5 rounded-md text-sm font-medium transition-colors"
               >
                 {loading ? "Logging in..." : "Log in"}
               </button>
@@ -121,7 +121,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-gray-500 mt-6">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-[#1B5B7D] hover:text-[#14455E] font-medium">Sign up</Link>
+            <Link href="/signup" className="text-[#6366F1] hover:text-[#4F46E5] font-medium">Sign up</Link>
           </p>
         </div>
       </div>

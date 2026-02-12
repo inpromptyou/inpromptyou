@@ -114,7 +114,7 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                 placeholder="Your full name"
               />
             </div>
@@ -125,13 +125,13 @@ export default function TestLandingPage({ params }: { params: Promise<{ id: stri
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
                 placeholder="you@example.com"
               />
             </div>
             <Link
               href={`/test/${test.id}/sandbox`}
-              className="block w-full bg-[#1B5B7D] hover:bg-[#14455E] text-white text-center py-2.5 rounded-md text-sm font-medium transition-colors"
+              className="block w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white text-center py-2.5 rounded-md text-sm font-medium transition-colors"
             >
               Start Test
             </Link>

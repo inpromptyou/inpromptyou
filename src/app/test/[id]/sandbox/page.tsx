@@ -219,7 +219,7 @@ export default function TestSandboxPage({
           {/* Mobile task toggle */}
           <button
             onClick={() => setShowMobileTask(!showMobileTask)}
-            className="md:hidden text-xs text-[#1B5B7D] font-medium px-2 py-1 rounded border border-[#1B5B7D]/20 hover:bg-[#1B5B7D]/5"
+            className="md:hidden text-xs text-[#6366F1] font-medium px-2 py-1 rounded border border-[#6366F1]/20 hover:bg-[#6366F1]/5"
           >
             {showMobileTask ? "Chat" : "Task"}
           </button>
@@ -412,8 +412,8 @@ export default function TestSandboxPage({
               ))}
             </div>
 
-            <div className="mt-5 p-3 bg-[#1B5B7D]/5 rounded-md border border-[#1B5B7D]/10">
-              <p className="text-xs text-[#1B5B7D] leading-relaxed">
+            <div className="mt-5 p-3 bg-[#6366F1]/5 rounded-md border border-[#6366F1]/10">
+              <p className="text-xs text-[#6366F1] leading-relaxed">
                 <strong>Tip:</strong> Write clear, specific prompts. Include
                 context about your target audience, desired format, and
                 constraints. Quality over quantity — fewer well-crafted
@@ -434,9 +434,9 @@ export default function TestSandboxPage({
             {messages.length === 0 && (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center max-w-xs">
-                  <div className="w-12 h-12 rounded-full bg-[#1B5B7D]/10 flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-full bg-[#6366F1]/10 flex items-center justify-center mx-auto mb-3">
                     <svg
-                      className="w-6 h-6 text-[#1B5B7D]"
+                      className="w-6 h-6 text-[#6366F1]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -458,7 +458,7 @@ export default function TestSandboxPage({
                     <span className="hidden md:inline">on the left</span>
                     <button
                       onClick={() => setShowMobileTask(true)}
-                      className="md:hidden text-[#1B5B7D] underline"
+                      className="md:hidden text-[#6366F1] underline"
                     >
                       here
                     </button>{" "}
@@ -476,7 +476,7 @@ export default function TestSandboxPage({
                 <div
                   className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-4 py-2.5 ${
                     msg.role === "user"
-                      ? "bg-[#1B5B7D] text-white"
+                      ? "bg-[#6366F1] text-white"
                       : "bg-white border border-gray-200 text-gray-800"
                   }`}
                 >
@@ -564,12 +564,12 @@ export default function TestSandboxPage({
                   }
                   disabled={isDisabled || isTyping}
                   rows={1}
-                  className="flex-1 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent disabled:bg-gray-50 disabled:text-gray-300 resize-none"
+                  className="flex-1 border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent disabled:bg-gray-50 disabled:text-gray-300 resize-none"
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isTyping || isDisabled}
-                  className="bg-[#1B5B7D] hover:bg-[#14455E] disabled:bg-gray-200 disabled:text-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shrink-0"
+                  className="bg-[#6366F1] hover:bg-[#4F46E5] disabled:bg-gray-200 disabled:text-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shrink-0"
                 >
                   {isTyping ? (
                     <svg

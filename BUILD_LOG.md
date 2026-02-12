@@ -368,3 +368,30 @@ All references updated across the codebase:
 - Files updated: layout.tsx, page.tsx (homepage, login, signup, privacy, terms, security, how-it-works, test/demo, test/[id], test/[id]/sandbox, test/[id]/results), Nav.tsx, Footer.tsx, DashboardLayout.tsx, ScoreCard.tsx, scoring.ts, scoring-criteria.ts, package.json, package-lock.json
 - TypeScript compiles clean (npx tsc --noEmit — no errors)
 
+
+---
+
+## 2026-02-12 — Homepage Redesign & Dark Theme Overhaul
+
+### What changed
+- **Complete homepage redesign** — Removed ocean background/GIF, replaced with professional dark SaaS design
+- **New design system** — Deep navy (#0A0F1C) base, indigo (#6366F1) accent, violet secondary, glass-morphism cards
+- **Homepage sections**: Hero with gradient text + pill badge, Social proof bar, How it works (3-step cards), Product mockup, Features grid (6 cards), Problem/Solution comparison, Pricing teaser (3 tiers), Final CTA
+- **Subtle animations**: fade-in-up with staggered delays, pulse glow on badge, dot-grid background pattern
+- **Nav.tsx** — Updated to dark theme with indigo accent, backdrop blur
+- **Footer.tsx** — Dark theme, copyright "© 2026 InpromptiFy. All rights reserved."
+- **globals.css** — Removed all ocean CSS (waves, particles, caustics, keyframes). Added dot-grid, glass-card, gradient-border, fade-in-up animations
+- **OceanBackground.tsx** — No longer used by any page (was already unused, component file left in place)
+- **Color migration across ALL pages**: Replaced #1B5B7D ? #6366F1, #14455E ? #4F46E5, #0C2A3A ? #0A0F1C across all page files, DashboardLayout.tsx, ScoreCard.tsx
+
+### Files updated
+- src/app/globals.css (complete rewrite)
+- src/app/page.tsx (complete rewrite)
+- src/components/Nav.tsx (dark theme update)
+- src/components/Footer.tsx (dark theme + copyright)
+- src/components/DashboardLayout.tsx (color migration)
+- src/components/ScoreCard.tsx (color migration)
+- All page.tsx files across app/ (color migration)
+
+### Verification
+- TypeScript compiles clean (npx tsc --noEmit — no errors)

@@ -124,11 +124,11 @@ export default function CreateTestPage() {
             <button
               onClick={() => { if (i < step || validateStep(step)) setStep(i); }}
               className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                i === step ? "text-[#1B5B7D]" : i < step ? "text-[#10B981]" : "text-gray-400"
+                i === step ? "text-[#6366F1]" : i < step ? "text-[#10B981]" : "text-gray-400"
               }`}
             >
               <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                i === step ? "bg-[#1B5B7D] text-white" : i < step ? "bg-[#10B981] text-white" : "bg-gray-200 text-gray-500"
+                i === step ? "bg-[#6366F1] text-white" : i < step ? "bg-[#10B981] text-white" : "bg-gray-200 text-gray-500"
               }`}>
                 {i < step ? (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
@@ -156,7 +156,7 @@ export default function CreateTestPage() {
                 type="text"
                 value={form.title}
                 onChange={(e) => update("title", e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent ${fieldErrors.title ? "border-red-300" : "border-gray-300"}`}
+                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent ${fieldErrors.title ? "border-red-300" : "border-gray-300"}`}
                 placeholder="e.g., Write a Marketing Email"
               />
               {fieldErrors.title && <p className="text-xs text-red-500 mt-1">{fieldErrors.title}</p>}
@@ -167,7 +167,7 @@ export default function CreateTestPage() {
                 value={form.description}
                 onChange={(e) => update("description", e.target.value)}
                 rows={3}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent resize-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none"
                 placeholder="Brief description of what this test evaluates..."
               />
             </div>
@@ -180,7 +180,7 @@ export default function CreateTestPage() {
                     type="button"
                     onClick={() => update("testType", t.value)}
                     className={`p-3 rounded-lg border-2 text-left transition-colors ${
-                      form.testType === t.value ? "border-[#1B5B7D] bg-[#1B5B7D]/10" : "border-gray-200 hover:border-gray-300"
+                      form.testType === t.value ? "border-[#6366F1] bg-[#6366F1]/10" : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="font-medium text-sm text-gray-900">{t.label}</div>
@@ -199,7 +199,7 @@ export default function CreateTestPage() {
                     type="button"
                     onClick={() => update("difficulty", d)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                      form.difficulty === d ? "border-[#1B5B7D] bg-[#1B5B7D]/10 text-[#1B5B7D]" : "border-gray-200 text-gray-600 hover:border-gray-300"
+                      form.difficulty === d ? "border-[#6366F1] bg-[#6366F1]/10 text-[#6366F1]" : "border-gray-200 text-gray-600 hover:border-gray-300"
                     }`}
                   >
                     {d.charAt(0).toUpperCase() + d.slice(1)}
@@ -221,7 +221,7 @@ export default function CreateTestPage() {
                 value={form.taskPrompt}
                 onChange={(e) => update("taskPrompt", e.target.value)}
                 rows={6}
-                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent resize-none ${fieldErrors.taskPrompt ? "border-red-300" : "border-gray-300"}`}
+                className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none ${fieldErrors.taskPrompt ? "border-red-300" : "border-gray-300"}`}
                 placeholder="Describe the task in detail..."
               />
               {fieldErrors.taskPrompt && <p className="text-xs text-red-500 mt-1">{fieldErrors.taskPrompt}</p>}
@@ -233,7 +233,7 @@ export default function CreateTestPage() {
                 value={form.expectedOutcomes}
                 onChange={(e) => update("expectedOutcomes", e.target.value)}
                 rows={4}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent resize-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none"
                 placeholder="What does a high-quality output look like?"
               />
             </div>
@@ -250,7 +250,7 @@ export default function CreateTestPage() {
                     type="button"
                     onClick={() => update("model", m.value)}
                     className={`p-4 rounded-lg border-2 text-left transition-colors ${
-                      form.model === m.value ? "border-[#1B5B7D] bg-[#1B5B7D]/10" : "border-gray-200 hover:border-gray-300"
+                      form.model === m.value ? "border-[#6366F1] bg-[#6366F1]/10" : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="font-semibold text-sm text-gray-900">{m.name}</div>
@@ -270,19 +270,19 @@ export default function CreateTestPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Max Attempts</label>
                 <input type="number" value={form.maxAttempts} onChange={(e) => update("maxAttempts", parseInt(e.target.value) || 1)} min={1} max={20}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
                 <p className="text-xs text-gray-500 mt-1">Number of prompts allowed</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Time Limit (minutes)</label>
                 <input type="number" value={form.timeLimitMinutes} onChange={(e) => update("timeLimitMinutes", parseInt(e.target.value) || 5)} min={1} max={120}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
                 <p className="text-xs text-gray-500 mt-1">Total time to complete</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Token Budget</label>
                 <input type="number" value={form.tokenBudget} onChange={(e) => update("tokenBudget", parseInt(e.target.value) || 500)} min={100} max={50000} step={500}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent" />
                 <p className="text-xs text-gray-500 mt-1">Max tokens across all prompts</p>
               </div>
             </div>
@@ -369,7 +369,7 @@ export default function CreateTestPage() {
           </button>
           <div className="flex gap-3">
             {step < steps.length - 1 ? (
-              <button onClick={goNext} className="px-6 py-2.5 bg-[#1B5B7D] hover:bg-[#14455E] text-white rounded-lg text-sm font-medium transition-colors">
+              <button onClick={goNext} className="px-6 py-2.5 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-lg text-sm font-medium transition-colors">
                 Continue
               </button>
             ) : (

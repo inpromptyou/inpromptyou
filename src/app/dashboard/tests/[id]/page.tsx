@@ -46,7 +46,7 @@ export default function TestDetailPage() {
   if (error || !test) return (
     <div className="p-6 lg:p-8">
       <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-4 py-3">{error || "Test not found"}</div>
-      <Link href="/dashboard/tests" className="text-sm text-[#1B5B7D] mt-4 inline-block">← Back to My Tests</Link>
+      <Link href="/dashboard/tests" className="text-sm text-[#6366F1] mt-4 inline-block">← Back to My Tests</Link>
     </div>
   );
 
@@ -105,7 +105,7 @@ export default function TestDetailPage() {
               <div key={key} className="flex items-center gap-3">
                 <span className="text-sm text-gray-500 w-20 capitalize">{key}</span>
                 <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden">
-                  <div className="bg-[#1B5B7D] h-full rounded" style={{ width: `${weights[key]}%` }} />
+                  <div className="bg-[#6366F1] h-full rounded" style={{ width: `${weights[key]}%` }} />
                 </div>
                 <span className="text-sm font-mono text-gray-600 w-10 text-right">{weights[key]}%</span>
               </div>

@@ -74,7 +74,7 @@ export default function CandidatesPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search candidates..."
-            className="w-full border border-gray-200 rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5B7D] focus:border-transparent"
+            className="w-full border border-gray-200 rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
           />
         </div>
       </div>

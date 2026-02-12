@@ -101,7 +101,7 @@ export default function TermsPage() {
               <h2 className="text-lg font-semibold text-gray-900">12. Contact</h2>
               <p>
                 Questions? Reach us at{" "}
-                <a href="mailto:gatelayerplus@gmail.com" className="text-[#1B5B7D] underline">gatelayerplus@gmail.com</a>.
+                <a href="mailto:gatelayerplus@gmail.com" className="text-[#6366F1] underline">gatelayerplus@gmail.com</a>.
               </p>
             </section>
           </div>

@@ -78,7 +78,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-900">8. Security</h2>
               <p>
-                We implement industry-standard security measures including encryption in transit (TLS) and at rest. For more details, see our <a href="/security" className="text-[#1B5B7D] underline">Security page</a>.
+                We implement industry-standard security measures including encryption in transit (TLS) and at rest. For more details, see our <a href="/security" className="text-[#6366F1] underline">Security page</a>.
               </p>
             </section>
 
@@ -93,7 +93,7 @@ export default function PrivacyPage() {
               <h2 className="text-lg font-semibold text-gray-900">10. Contact</h2>
               <p>
                 Questions about this policy? Contact us at{" "}
-                <a href="mailto:gatelayerplus@gmail.com" className="text-[#1B5B7D] underline">gatelayerplus@gmail.com</a>.
+                <a href="mailto:gatelayerplus@gmail.com" className="text-[#6366F1] underline">gatelayerplus@gmail.com</a>.
               </p>
             </section>
           </div>
