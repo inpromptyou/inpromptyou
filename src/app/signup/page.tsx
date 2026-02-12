@@ -75,8 +75,8 @@ export default function SignupPage() {
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-6">
-              <img src="/logo-icon.jpg" alt="Inpromptyou" width={32} height={32} className="rounded-md" />
-              <span className="font-bold text-xl text-gray-900">Inpromptyou</span>
+              <img src="/logo-icon.jpg" alt="InpromptiFy" width={32} height={32} className="rounded-md" />
+              <span className="font-bold text-xl text-gray-900">InpromptiFy</span>
             </Link>
             <h1 className="text-xl font-bold text-gray-900">Create your account</h1>
             <p className="text-gray-500 text-sm mt-1">Free to start. No credit card required.</p>

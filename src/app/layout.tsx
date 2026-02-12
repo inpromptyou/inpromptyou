@@ -3,7 +3,7 @@ import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Inpromptyou — Know who can actually prompt",
+  title: "InpromptiFy — Know who can actually prompt",
   description: "The assessment platform for AI prompting skills. Stop guessing. Start measuring. Create real-world tests, score candidates, hire the ones who can actually use AI.",
   icons: { icon: '/logo-icon.jpg', apple: '/logo-icon.jpg' },
 };

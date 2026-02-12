@@ -23,7 +23,7 @@ export default function HomePage() {
               Your $200/month AI bill just told you nothing about who&apos;s wasting it.
             </h1>
             <p className="text-lg text-gray-300 leading-relaxed mb-10 max-w-xl">
-              Inpromptyou is a hands-on assessment platform for AI prompting skills.
+              InpromptiFy is a hands-on assessment platform for AI prompting skills.
               Create a test. Watch candidates actually use an LLM. Get a score
               that means something. Takes five minutes to set up.
             </p>
@@ -55,7 +55,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex-1 mx-4">
                       <div className="bg-gray-800 rounded px-3 py-1 text-xs text-gray-500 max-w-xs">
-                        inpromptyou.com/test/sandbox
+                        InpromptiFy.com/test/sandbox
                       </div>
                     </div>
                   </div>

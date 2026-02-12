@@ -2,7 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Terms of Service — Inpromptyou",
+  title: "Terms of Service — InpromptiFy",
 };
 
 export default function TermsPage() {
@@ -18,7 +18,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-900 mt-0">1. Acceptance of Terms</h2>
               <p>
-                By accessing or using Inpromptyou (&ldquo;the Service&rdquo;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.
+                By accessing or using InpromptiFy (&ldquo;the Service&rdquo;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.
               </p>
             </section>
 
@@ -39,7 +39,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-900">4. Intellectual Property</h2>
               <p>
-                The Service, its design, code, scoring models, and content are owned by Inpromptyou and protected by intellectual property laws. You may not copy, modify, or reverse-engineer any part of the platform.
+                The Service, its design, code, scoring models, and content are owned by InpromptiFy and protected by intellectual property laws. You may not copy, modify, or reverse-engineer any part of the platform.
               </p>
             </section>
 
@@ -72,7 +72,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-900">8. Limitation of Liability</h2>
               <p>
-                To the maximum extent permitted by law, Inpromptyou shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenue, whether incurred directly or indirectly. Our total liability shall not exceed the amount you paid us in the twelve months preceding the claim.
+                To the maximum extent permitted by law, InpromptiFy shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenue, whether incurred directly or indirectly. Our total liability shall not exceed the amount you paid us in the twelve months preceding the claim.
               </p>
             </section>
 

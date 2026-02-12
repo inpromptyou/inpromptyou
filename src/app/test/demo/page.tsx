@@ -204,7 +204,7 @@ export default function DemoTestPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
-            <Link href="/" className="font-bold text-base text-gray-900">Inpromptyou</Link>
+            <Link href="/" className="font-bold text-base text-gray-900">InpromptiFy</Link>
             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-amber-100 text-amber-700">Demo</span>
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function DemoTestPage() {
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-gray-900 border-b border-gray-800 text-xs text-gray-400 shrink-0">
         <div className="flex items-center gap-3">
-          <Link href="/" className="font-bold text-white text-sm">Inpromptyou</Link>
+          <Link href="/" className="font-bold text-white text-sm">InpromptiFy</Link>
           <span className="px-1.5 py-0.5 rounded bg-amber-900/50 text-amber-400 text-[10px] font-medium">DEMO</span>
         </div>
         <div className="flex items-center gap-5">

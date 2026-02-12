@@ -53,11 +53,11 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-6">
-              <img src="/logo-icon.jpg" alt="Inpromptyou" width={32} height={32} className="rounded-md" />
-              <span className="font-bold text-xl text-gray-900">Inpromptyou</span>
+              <img src="/logo-icon.jpg" alt="InpromptiFy" width={32} height={32} className="rounded-md" />
+              <span className="font-bold text-xl text-gray-900">InpromptiFy</span>
             </Link>
             <h1 className="text-xl font-bold text-gray-900">Welcome back</h1>
-            <p className="text-gray-500 text-sm mt-1">Log in to your Inpromptyou account</p>
+            <p className="text-gray-500 text-sm mt-1">Log in to your InpromptiFy account</p>
           </div>
 
           <div className="bg-white rounded-lg border border-gray-200 p-6">

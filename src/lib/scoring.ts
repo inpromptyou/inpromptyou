@@ -1,5 +1,5 @@
 /**
- * scoring.ts — The InpromptYou Comprehensive Scoring Engine
+ * scoring.ts — The InpromptiFy Comprehensive Scoring Engine
  * 
  * Evaluates candidate performance across 5 dimensions:
  * 1. Prompt Quality — clarity, specificity, structure, constraints

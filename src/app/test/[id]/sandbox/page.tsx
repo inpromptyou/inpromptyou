@@ -207,7 +207,7 @@ export default function TestSandboxPage({
             href="/"
             className="font-bold text-sm text-gray-900 shrink-0"
           >
-            Inpromptyou
+            InpromptiFy
           </Link>
           <span className="text-xs text-gray-300 hidden sm:inline">|</span>
           <div className="min-w-0 hidden sm:block">

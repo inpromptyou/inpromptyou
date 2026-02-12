@@ -2,7 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Privacy Policy — Inpromptyou",
+  title: "Privacy Policy — InpromptiFy",
 };
 
 export default function PrivacyPage() {
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-900 mt-0">1. Introduction</h2>
               <p>
-                Inpromptyou (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates the inpromptyou.com platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
+                InpromptiFy (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates the InpromptiFy.com platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
               </p>
             </section>
 

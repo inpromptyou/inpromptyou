@@ -8,8 +8,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2">
-              <Image src="/logo-icon.jpg" alt="Inpromptyou" width={24} height={24} className="rounded" />
-              <span className="font-bold text-lg text-gray-900">Inpromptyou</span>
+              <Image src="/logo-icon.jpg" alt="InpromptiFy" width={24} height={24} className="rounded" />
+              <span className="font-bold text-lg text-gray-900">InpromptiFy</span>
             </div>
             <p className="text-sm text-gray-500 mt-3 leading-relaxed max-w-xs">
               The assessment platform for AI prompting skills. Measure what actually matters.
@@ -41,9 +41,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-200 mt-10 pt-6 flex items-center justify-between">
-          <p className="text-sm text-gray-400">&copy; 2026 Inpromptyou. All rights reserved.</p>
+          <p className="text-sm text-gray-400">&copy; 2026 InpromptiFy. All rights reserved.</p>
           <a
-            href="https://x.com/inpromptyouai"
+            href="https://x.com/InpromptiFyai"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-gray-900 transition-colors"

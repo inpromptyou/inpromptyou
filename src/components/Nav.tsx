@@ -16,8 +16,8 @@ export default function Nav({ transparent = false }: { transparent?: boolean }) 
       <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-icon.jpg" alt="Inpromptyou" width={28} height={28} className="rounded" />
-            <span className={`font-bold text-xl tracking-tight ${transparent ? "text-white" : "text-gray-900"}`}>Inpromptyou</span>
+            <Image src="/logo-icon.jpg" alt="InpromptiFy" width={28} height={28} className="rounded" />
+            <span className={`font-bold text-xl tracking-tight ${transparent ? "text-white" : "text-gray-900"}`}>InpromptiFy</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

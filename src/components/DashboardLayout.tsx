@@ -90,8 +90,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <>
       <div className="p-4 border-b border-[#14374A]">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo-icon.jpg" alt="Inpromptyou" width={24} height={24} className="rounded" />
-          <span className="font-bold text-white text-sm">Inpromptyou</span>
+          <Image src="/logo-icon.jpg" alt="InpromptiFy" width={24} height={24} className="rounded" />
+          <span className="font-bold text-white text-sm">InpromptiFy</span>
         </Link>
       </div>
 
@@ -172,8 +172,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </svg>
           </button>
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-icon.jpg" alt="Inpromptyou" width={24} height={24} className="rounded" />
-            <span className="font-bold text-gray-900 text-sm">Inpromptyou</span>
+            <Image src="/logo-icon.jpg" alt="InpromptiFy" width={24} height={24} className="rounded" />
+            <span className="font-bold text-gray-900 text-sm">InpromptiFy</span>
           </Link>
         </div>
         {children}

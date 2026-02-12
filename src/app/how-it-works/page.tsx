@@ -10,7 +10,7 @@ export default function HowItWorksPage() {
         {/* Header */}
         <section className="noise-bg bg-gray-50 border-b border-gray-200/60">
           <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 py-16 md:py-20">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Inpromptyou works</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How InpromptiFy works</h1>
             <p className="text-gray-600 text-base max-w-xl">
               Two sides of the same coin: you create an assessment, candidates take it in a
               sandboxed AI environment, and both of you get useful data out the other end.

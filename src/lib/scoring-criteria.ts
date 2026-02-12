@@ -1,5 +1,5 @@
 /**
- * scoring-criteria.ts — Configurable scoring criteria for InpromptYou assessments.
+ * scoring-criteria.ts — Configurable scoring criteria for InpromptiFy assessments.
  * 
  * Employers can customize these per test. Each test type has default criteria
  * that define what "good" looks like for prompts and responses.

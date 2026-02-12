@@ -2,7 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Security — Inpromptyou",
+  title: "Security — InpromptiFy",
 };
 
 export default function SecurityPage() {
@@ -25,7 +25,7 @@ export default function SecurityPage() {
             <section>
               <h2 className="text-lg font-semibold text-gray-900">Infrastructure</h2>
               <p>
-                Inpromptyou is hosted on industry-leading cloud providers with SOC&nbsp;2 and ISO&nbsp;27001 certifications. We use isolated environments, network segmentation, and least-privilege access controls across our infrastructure.
+                InpromptiFy is hosted on industry-leading cloud providers with SOC&nbsp;2 and ISO&nbsp;27001 certifications. We use isolated environments, network segmentation, and least-privilege access controls across our infrastructure.
               </p>
             </section>
 
@@ -47,7 +47,7 @@ export default function SecurityPage() {
               <h2 className="text-lg font-semibold text-gray-900">Reporting Vulnerabilities</h2>
               <p>
                 If you discover a security vulnerability, please disclose it responsibly. Contact us at{" "}
-                <a href="mailto:security@inpromptyou.ai" className="text-[#1B5B7D] underline">security@inpromptyou.ai</a>.
+                <a href="mailto:security@InpromptiFy.ai" className="text-[#1B5B7D] underline">security@InpromptiFy.ai</a>.
                 We take all reports seriously and aim to respond within 48&nbsp;hours.
               </p>
             </section>
@@ -56,7 +56,7 @@ export default function SecurityPage() {
               <h2 className="text-lg font-semibold text-gray-900">Questions</h2>
               <p>
                 For general security questions, reach us at{" "}
-                <a href="mailto:security@inpromptyou.ai" className="text-[#1B5B7D] underline">security@inpromptyou.ai</a>.
+                <a href="mailto:security@InpromptiFy.ai" className="text-[#1B5B7D] underline">security@InpromptiFy.ai</a>.
               </p>
             </section>
           </div>

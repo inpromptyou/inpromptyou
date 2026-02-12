@@ -359,3 +359,12 @@ Complete rewrite of the sandbox page with:
 - Replace heuristic scoring with LLM-as-judge in `/api/test/evaluate`
 - Persist results to Neon DB instead of sessionStorage
 - Add auth check to API routes (candidate session tracking)
+
+## 2026-02-12 — Rebrand InpromptYou ? InpromptiFy
+
+All references updated across the codebase:
+- Brand: InpromptYou/Inpromptyou/inpromptyou/INPROMPTYOU ? InpromptiFy/Inpromptify/inpromptify/INPROMPTIFY
+- Domains: inpromptyou.ai, inpromptyou.com ? inpromptify.com
+- Files updated: layout.tsx, page.tsx (homepage, login, signup, privacy, terms, security, how-it-works, test/demo, test/[id], test/[id]/sandbox, test/[id]/results), Nav.tsx, Footer.tsx, DashboardLayout.tsx, ScoreCard.tsx, scoring.ts, scoring-criteria.ts, package.json, package-lock.json
+- TypeScript compiles clean (npx tsc --noEmit — no errors)
+
